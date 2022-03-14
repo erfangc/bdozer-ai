@@ -1,18 +1,8 @@
-# ----------------------------------------
-# pkgs required:
-# ----------------------------------------
-# pip install -U sentence-transformers
-# pip install -U spacy
-# pip install -U fastapi
-# pip install "uvicorn[standard]"
-# python -m spacy download en_core_web_trf
-# ----------------------------------------
-
-from shared_objects import cross_encoder, app, nlp
 from CrossEncodeInput import CrossEncodeInput
 from DocInput import DocInput
 from ScoredSentence import ScoredSentence
 from Sentences import Sentences
+from shared_objects import cross_encoder, app, nlp
 
 
 @app.post(
