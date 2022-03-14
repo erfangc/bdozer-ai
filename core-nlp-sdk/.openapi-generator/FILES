@@ -34,4 +34,3 @@ src/main/java/co/bdozer/core/nlp/sdk/model/HTTPValidationError.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ScoredSentence.java
 src/main/java/co/bdozer/core/nlp/sdk/model/Sentences.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ValidationError.java
-src/test/java/co/bdozer/core/nlp/sdk/model/ScoredSentenceTest.java

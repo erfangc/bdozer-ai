@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   Sentences.JSON_PROPERTY_SENTENCES
 })
 @JsonTypeName("Sentences")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-13T17:04:42.570-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-13T20:35:04.937-04:00[America/New_York]")
 public class Sentences {
   public static final String JSON_PROPERTY_SENTENCES = "sentences";
   private List<String> sentences = new ArrayList<String>();

@@ -20,6 +20,10 @@ cd core-nlp; uvicorn main:app --reload
 npm install @openapitools/openapi-generator-cli -g
 openapi-generator-cli version
 
-# run SDK generation
-openapi-generator-cli generate -i http://localhost:8000/openapi.json -g java -o core-nlp-sdk -c config.yaml 
+# run SDK generation (from the root directory)
+cd ~/IdeaProjects/bdozer-ai/ && openapi-generator-cli generate \
+ -i http://localhost:8000/openapi.json \
+ -g java \
+ -o core-nlp-sdk \
+ -c config.yaml 
 ```
