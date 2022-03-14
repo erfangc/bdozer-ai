@@ -1,8 +1,3 @@
-import spacy
-from fastapi import FastAPI
-from pydantic import BaseModel
-from sentence_transformers import CrossEncoder
-
 # ----------------------------------------
 # pkgs required:
 # ----------------------------------------
@@ -13,28 +8,11 @@ from sentence_transformers import CrossEncoder
 # python -m spacy download en_core_web_trf
 # ----------------------------------------
 
-app = FastAPI()
-
-nlp = spacy.load("en_core_web_trf")
-cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-
-
-class DocInput(BaseModel):
-    doc: str
-
-
-class Sentences(BaseModel):
-    sentences: list[str]
-
-
-class ScoredSentence(BaseModel):
-    sentence: str
-    score: float
-
-
-class CrossEncodeInput(BaseModel):
-    query: str
-    sentences: list[str]
+from shared_objects import cross_encoder, app, nlp
+from CrossEncodeInput import CrossEncodeInput
+from DocInput import DocInput
+from ScoredSentence import ScoredSentence
+from Sentences import Sentences
 
 
 @app.post(
