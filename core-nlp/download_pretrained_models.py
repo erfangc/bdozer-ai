@@ -11,9 +11,10 @@ def save_pretrained_model(model_name: str):
     :param model_name: the HuggingFace pretrained model name
     :return: nothing
     """
-    print(f"Saving pre-trained model {model_name} to local ./{model_name}")
+    print(f"Fetching pre-trained model {model_name}")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    print(f"Saving pre-trained model {model_name} to local ./{model_name}")
     model.save_pretrained(f'./{model_name}')
     tokenizer.save_pretrained(f'./{model_name}')
 
