@@ -1,8 +1,37 @@
+import torch
+
+from AnswerQuestionRequest import AnswerQuestionRequest, AnswerQuestionResponse
 from CrossEncodeInput import CrossEncodeInput
 from DocInput import DocInput
 from ScoredSentence import ScoredSentence
 from Sentences import Sentences
-from shared_objects import cross_encoder, app, nlp
+from shared_objects import cross_encoder, app, nlp, q_a_model, q_a_tokenizer
+
+
+@app.post(
+    path="/answer_question",
+    response_model=list[AnswerQuestionResponse]
+)
+def classification(request: AnswerQuestionRequest) -> list[AnswerQuestionResponse]:
+    answers = []
+    for question in request.questions:
+        inputs = q_a_tokenizer(question, request.context, add_special_tokens=True, return_tensors="pt")
+        input_ids = inputs["input_ids"].tolist()[0]
+
+        outputs = q_a_model(**inputs)
+        answer_start_scores = outputs.start_logits
+        answer_end_scores = outputs.end_logits
+
+        # Get the most likely beginning of answer with the argmax of the score
+        answer_start = torch.argmax(answer_start_scores)
+        # Get the most likely end of answer with the argmax of the score
+        answer_end = torch.argmax(answer_end_scores) + 1
+
+        answer = q_a_tokenizer.convert_tokens_to_string(
+            q_a_tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end])
+        )
+        answers.append(AnswerQuestionResponse(question=question, best_answer=answer))
+    return answers
 
 
 @app.post(
