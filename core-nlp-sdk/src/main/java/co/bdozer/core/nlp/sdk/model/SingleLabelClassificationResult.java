@@ -22,86 +22,80 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * CrossEncodeInput
+ * SingleLabelClassificationResult
  */
 @JsonPropertyOrder({
-  CrossEncodeInput.JSON_PROPERTY_QUERY,
-  CrossEncodeInput.JSON_PROPERTY_SENTENCES
+  SingleLabelClassificationResult.JSON_PROPERTY_LABEL,
+  SingleLabelClassificationResult.JSON_PROPERTY_SCORE
 })
-@JsonTypeName("CrossEncodeInput")
+@JsonTypeName("SingleLabelClassificationResult")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
-public class CrossEncodeInput {
-  public static final String JSON_PROPERTY_QUERY = "query";
-  private String query;
+public class SingleLabelClassificationResult {
+  public static final String JSON_PROPERTY_LABEL = "label";
+  private String label;
 
-  public static final String JSON_PROPERTY_SENTENCES = "sentences";
-  private List<String> sentences = new ArrayList<String>();
+  public static final String JSON_PROPERTY_SCORE = "score";
+  private BigDecimal score;
 
-  public CrossEncodeInput() { 
+  public SingleLabelClassificationResult() { 
   }
 
-  public CrossEncodeInput query(String query) {
+  public SingleLabelClassificationResult label(String label) {
     
-    this.query = query;
+    this.label = label;
     return this;
   }
 
    /**
-   * Get query
-   * @return query
+   * Get label
+   * @return label
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_LABEL)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public String getQuery() {
-    return query;
+  public String getLabel() {
+    return label;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_LABEL)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setQuery(String query) {
-    this.query = query;
+  public void setLabel(String label) {
+    this.label = label;
   }
 
 
-  public CrossEncodeInput sentences(List<String> sentences) {
+  public SingleLabelClassificationResult score(BigDecimal score) {
     
-    this.sentences = sentences;
-    return this;
-  }
-
-  public CrossEncodeInput addSentencesItem(String sentencesItem) {
-    this.sentences.add(sentencesItem);
+    this.score = score;
     return this;
   }
 
    /**
-   * Get sentences
-   * @return sentences
+   * Get score
+   * @return score
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_SCORE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public List<String> getSentences() {
-    return sentences;
+  public BigDecimal getScore() {
+    return score;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_SCORE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSentences(List<String> sentences) {
-    this.sentences = sentences;
+  public void setScore(BigDecimal score) {
+    this.score = score;
   }
 
 
@@ -113,22 +107,22 @@ public class CrossEncodeInput {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CrossEncodeInput crossEncodeInput = (CrossEncodeInput) o;
-    return Objects.equals(this.query, crossEncodeInput.query) &&
-        Objects.equals(this.sentences, crossEncodeInput.sentences);
+    SingleLabelClassificationResult singleLabelClassificationResult = (SingleLabelClassificationResult) o;
+    return Objects.equals(this.label, singleLabelClassificationResult.label) &&
+        Objects.equals(this.score, singleLabelClassificationResult.score);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(query, sentences);
+    return Objects.hash(label, score);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CrossEncodeInput {\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    sentences: ").append(toIndentedString(sentences)).append("\n");
+    sb.append("class SingleLabelClassificationResult {\n");
+    sb.append("    label: ").append(toIndentedString(label)).append("\n");
+    sb.append("    score: ").append(toIndentedString(score)).append("\n");
     sb.append("}");
     return sb.toString();
   }

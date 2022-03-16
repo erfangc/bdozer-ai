@@ -4,11 +4,15 @@ import co.bdozer.core.nlp.sdk.ApiClient;
 import co.bdozer.core.nlp.sdk.EncodingUtils;
 import co.bdozer.core.nlp.sdk.model.ApiResponse;
 
+import co.bdozer.core.nlp.sdk.model.AnswerQuestionRequest;
+import co.bdozer.core.nlp.sdk.model.AnswerQuestionResponse;
 import co.bdozer.core.nlp.sdk.model.CrossEncodeInput;
 import co.bdozer.core.nlp.sdk.model.DocInput;
 import co.bdozer.core.nlp.sdk.model.HTTPValidationError;
 import co.bdozer.core.nlp.sdk.model.ScoredSentence;
 import co.bdozer.core.nlp.sdk.model.Sentences;
+import co.bdozer.core.nlp.sdk.model.ZeroShotClassificationRequest;
+import co.bdozer.core.nlp.sdk.model.ZeroShotClassificationResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +20,37 @@ import java.util.List;
 import java.util.Map;
 import feign.*;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-13T20:35:04.937-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
 public interface DefaultApi extends ApiClient.Api {
+
+
+  /**
+   * Answer Question
+   * 
+   * @param answerQuestionRequest  (required)
+   * @return List&lt;AnswerQuestionResponse&gt;
+   */
+  @RequestLine("POST /answer_question")
+  @Headers({
+    "Content-Type: application/json",
+    "Accept: application/json",
+  })
+  List<AnswerQuestionResponse> answerQuestionAnswerQuestionPost(AnswerQuestionRequest answerQuestionRequest);
+
+  /**
+   * Answer Question
+   * Similar to <code>answerQuestionAnswerQuestionPost</code> but it also returns the http response headers .
+   * 
+   * @param answerQuestionRequest  (required)
+   * @return A ApiResponse that wraps the response boyd and the http headers.
+   */
+  @RequestLine("POST /answer_question")
+  @Headers({
+    "Content-Type: application/json",
+    "Accept: application/json",
+  })
+  ApiResponse<List<AnswerQuestionResponse>> answerQuestionAnswerQuestionPostWithHttpInfo(AnswerQuestionRequest answerQuestionRequest);
+
 
 
   /**
@@ -75,6 +108,35 @@ public interface DefaultApi extends ApiClient.Api {
     "Accept: application/json",
   })
   ApiResponse<Sentences> getSentencesWithHttpInfo(DocInput docInput);
+
+
+
+  /**
+   * Zero Shot Classification
+   * 
+   * @param zeroShotClassificationRequest  (required)
+   * @return ZeroShotClassificationResponse
+   */
+  @RequestLine("POST /zero_shot_classification")
+  @Headers({
+    "Content-Type: application/json",
+    "Accept: application/json",
+  })
+  ZeroShotClassificationResponse zeroShotClassificationZeroShotClassificationPost(ZeroShotClassificationRequest zeroShotClassificationRequest);
+
+  /**
+   * Zero Shot Classification
+   * Similar to <code>zeroShotClassificationZeroShotClassificationPost</code> but it also returns the http response headers .
+   * 
+   * @param zeroShotClassificationRequest  (required)
+   * @return A ApiResponse that wraps the response boyd and the http headers.
+   */
+  @RequestLine("POST /zero_shot_classification")
+  @Headers({
+    "Content-Type: application/json",
+    "Accept: application/json",
+  })
+  ApiResponse<ZeroShotClassificationResponse> zeroShotClassificationZeroShotClassificationPostWithHttpInfo(ZeroShotClassificationRequest zeroShotClassificationRequest);
 
 
 }

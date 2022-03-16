@@ -5,6 +5,59 @@ info:
 servers:
 - url: /
 paths:
+  /zero_shot_classification:
+    post:
+      operationId: zero_shot_classification_zero_shot_classification_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZeroShotClassificationRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZeroShotClassificationResponse'
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Zero Shot Classification
+      x-contentType: application/json
+      x-accepts: application/json
+  /answer_question:
+    post:
+      operationId: answer_question_answer_question_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnswerQuestionRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AnswerQuestionResponse'
+                title: Response Answer Question Answer Question Post
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+          description: Validation Error
+      summary: Answer Question
+      x-contentType: application/json
+      x-accepts: application/json
   /sentence_producer:
     post:
       description: Turns a input document into sentences using `en_core_web_trf` transformer
@@ -63,6 +116,42 @@ paths:
       x-accepts: application/json
 components:
   schemas:
+    AnswerQuestionRequest:
+      example:
+        questions:
+        - questions
+        - questions
+        context: context
+      properties:
+        questions:
+          items:
+            type: string
+          title: Questions
+          type: array
+        context:
+          title: Context
+          type: string
+      required:
+      - context
+      - questions
+      title: AnswerQuestionRequest
+      type: object
+    AnswerQuestionResponse:
+      example:
+        question: question
+        best_answer: best_answer
+      properties:
+        question:
+          title: Question
+          type: string
+        best_answer:
+          title: Best Answer
+          type: string
+      required:
+      - best_answer
+      - question
+      title: AnswerQuestionResponse
+      type: object
     CrossEncodeInput:
       example:
         sentences:
@@ -134,6 +223,22 @@ components:
       - sentences
       title: Sentences
       type: object
+    SingleLabelClassificationResult:
+      example:
+        score: 0.8008281904610115
+        label: label
+      properties:
+        label:
+          title: Label
+          type: string
+        score:
+          title: Score
+          type: number
+      required:
+      - label
+      - score
+      title: SingleLabelClassificationResult
+      type: object
     ValidationError:
       properties:
         loc:
@@ -152,5 +257,42 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    ZeroShotClassificationRequest:
+      example:
+        sentence: sentence
+        candidate_labels:
+        - candidate_labels
+        - candidate_labels
+      properties:
+        candidate_labels:
+          items:
+            type: string
+          title: Candidate Labels
+          type: array
+        sentence:
+          title: Sentence
+          type: string
+      required:
+      - candidate_labels
+      - sentence
+      title: ZeroShotClassificationRequest
+      type: object
+    ZeroShotClassificationResponse:
+      example:
+        result:
+        - score: 0.8008281904610115
+          label: label
+        - score: 0.8008281904610115
+          label: label
+      properties:
+        result:
+          items:
+            $ref: '#/components/schemas/SingleLabelClassificationResult'
+          title: Result
+          type: array
+      required:
+      - result
+      title: ZeroShotClassificationResponse
       type: object
 

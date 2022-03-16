@@ -15,6 +15,7 @@ package co.bdozer.core.nlp.sdk.model;
 
 import java.util.Objects;
 import java.util.Arrays;
+import co.bdozer.core.nlp.sdk.model.SingleLabelClassificationResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -28,80 +29,49 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * CrossEncodeInput
+ * ZeroShotClassificationResponse
  */
 @JsonPropertyOrder({
-  CrossEncodeInput.JSON_PROPERTY_QUERY,
-  CrossEncodeInput.JSON_PROPERTY_SENTENCES
+  ZeroShotClassificationResponse.JSON_PROPERTY_RESULT
 })
-@JsonTypeName("CrossEncodeInput")
+@JsonTypeName("ZeroShotClassificationResponse")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
-public class CrossEncodeInput {
-  public static final String JSON_PROPERTY_QUERY = "query";
-  private String query;
+public class ZeroShotClassificationResponse {
+  public static final String JSON_PROPERTY_RESULT = "result";
+  private List<SingleLabelClassificationResult> result = new ArrayList<SingleLabelClassificationResult>();
 
-  public static final String JSON_PROPERTY_SENTENCES = "sentences";
-  private List<String> sentences = new ArrayList<String>();
-
-  public CrossEncodeInput() { 
+  public ZeroShotClassificationResponse() { 
   }
 
-  public CrossEncodeInput query(String query) {
+  public ZeroShotClassificationResponse result(List<SingleLabelClassificationResult> result) {
     
-    this.query = query;
+    this.result = result;
+    return this;
+  }
+
+  public ZeroShotClassificationResponse addResultItem(SingleLabelClassificationResult resultItem) {
+    this.result.add(resultItem);
     return this;
   }
 
    /**
-   * Get query
-   * @return query
+   * Get result
+   * @return result
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_RESULT)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public String getQuery() {
-    return query;
+  public List<SingleLabelClassificationResult> getResult() {
+    return result;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_RESULT)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setQuery(String query) {
-    this.query = query;
-  }
-
-
-  public CrossEncodeInput sentences(List<String> sentences) {
-    
-    this.sentences = sentences;
-    return this;
-  }
-
-  public CrossEncodeInput addSentencesItem(String sentencesItem) {
-    this.sentences.add(sentencesItem);
-    return this;
-  }
-
-   /**
-   * Get sentences
-   * @return sentences
-  **/
-  @javax.annotation.Nonnull
-  @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-
-  public List<String> getSentences() {
-    return sentences;
-  }
-
-
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
-  @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSentences(List<String> sentences) {
-    this.sentences = sentences;
+  public void setResult(List<SingleLabelClassificationResult> result) {
+    this.result = result;
   }
 
 
@@ -113,22 +83,20 @@ public class CrossEncodeInput {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CrossEncodeInput crossEncodeInput = (CrossEncodeInput) o;
-    return Objects.equals(this.query, crossEncodeInput.query) &&
-        Objects.equals(this.sentences, crossEncodeInput.sentences);
+    ZeroShotClassificationResponse zeroShotClassificationResponse = (ZeroShotClassificationResponse) o;
+    return Objects.equals(this.result, zeroShotClassificationResponse.result);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(query, sentences);
+    return Objects.hash(result);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CrossEncodeInput {\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    sentences: ").append(toIndentedString(sentences)).append("\n");
+    sb.append("class ZeroShotClassificationResponse {\n");
+    sb.append("    result: ").append(toIndentedString(result)).append("\n");
     sb.append("}");
     return sb.toString();
   }

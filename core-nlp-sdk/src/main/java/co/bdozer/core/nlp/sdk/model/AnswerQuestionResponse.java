@@ -22,86 +22,79 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * CrossEncodeInput
+ * AnswerQuestionResponse
  */
 @JsonPropertyOrder({
-  CrossEncodeInput.JSON_PROPERTY_QUERY,
-  CrossEncodeInput.JSON_PROPERTY_SENTENCES
+  AnswerQuestionResponse.JSON_PROPERTY_QUESTION,
+  AnswerQuestionResponse.JSON_PROPERTY_BEST_ANSWER
 })
-@JsonTypeName("CrossEncodeInput")
+@JsonTypeName("AnswerQuestionResponse")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
-public class CrossEncodeInput {
-  public static final String JSON_PROPERTY_QUERY = "query";
-  private String query;
+public class AnswerQuestionResponse {
+  public static final String JSON_PROPERTY_QUESTION = "question";
+  private String question;
 
-  public static final String JSON_PROPERTY_SENTENCES = "sentences";
-  private List<String> sentences = new ArrayList<String>();
+  public static final String JSON_PROPERTY_BEST_ANSWER = "best_answer";
+  private String bestAnswer;
 
-  public CrossEncodeInput() { 
+  public AnswerQuestionResponse() { 
   }
 
-  public CrossEncodeInput query(String query) {
+  public AnswerQuestionResponse question(String question) {
     
-    this.query = query;
+    this.question = question;
     return this;
   }
 
    /**
-   * Get query
-   * @return query
+   * Get question
+   * @return question
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_QUESTION)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public String getQuery() {
-    return query;
+  public String getQuestion() {
+    return question;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_QUESTION)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setQuery(String query) {
-    this.query = query;
+  public void setQuestion(String question) {
+    this.question = question;
   }
 
 
-  public CrossEncodeInput sentences(List<String> sentences) {
+  public AnswerQuestionResponse bestAnswer(String bestAnswer) {
     
-    this.sentences = sentences;
-    return this;
-  }
-
-  public CrossEncodeInput addSentencesItem(String sentencesItem) {
-    this.sentences.add(sentencesItem);
+    this.bestAnswer = bestAnswer;
     return this;
   }
 
    /**
-   * Get sentences
-   * @return sentences
+   * Get bestAnswer
+   * @return bestAnswer
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_BEST_ANSWER)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public List<String> getSentences() {
-    return sentences;
+  public String getBestAnswer() {
+    return bestAnswer;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_BEST_ANSWER)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSentences(List<String> sentences) {
-    this.sentences = sentences;
+  public void setBestAnswer(String bestAnswer) {
+    this.bestAnswer = bestAnswer;
   }
 
 
@@ -113,22 +106,22 @@ public class CrossEncodeInput {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CrossEncodeInput crossEncodeInput = (CrossEncodeInput) o;
-    return Objects.equals(this.query, crossEncodeInput.query) &&
-        Objects.equals(this.sentences, crossEncodeInput.sentences);
+    AnswerQuestionResponse answerQuestionResponse = (AnswerQuestionResponse) o;
+    return Objects.equals(this.question, answerQuestionResponse.question) &&
+        Objects.equals(this.bestAnswer, answerQuestionResponse.bestAnswer);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(query, sentences);
+    return Objects.hash(question, bestAnswer);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CrossEncodeInput {\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    sentences: ").append(toIndentedString(sentences)).append("\n");
+    sb.append("class AnswerQuestionResponse {\n");
+    sb.append("    question: ").append(toIndentedString(question)).append("\n");
+    sb.append("    bestAnswer: ").append(toIndentedString(bestAnswer)).append("\n");
     sb.append("}");
     return sb.toString();
   }

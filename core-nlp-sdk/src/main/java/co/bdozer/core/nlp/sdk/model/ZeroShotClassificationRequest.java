@@ -28,80 +28,80 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * CrossEncodeInput
+ * ZeroShotClassificationRequest
  */
 @JsonPropertyOrder({
-  CrossEncodeInput.JSON_PROPERTY_QUERY,
-  CrossEncodeInput.JSON_PROPERTY_SENTENCES
+  ZeroShotClassificationRequest.JSON_PROPERTY_CANDIDATE_LABELS,
+  ZeroShotClassificationRequest.JSON_PROPERTY_SENTENCE
 })
-@JsonTypeName("CrossEncodeInput")
+@JsonTypeName("ZeroShotClassificationRequest")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
-public class CrossEncodeInput {
-  public static final String JSON_PROPERTY_QUERY = "query";
-  private String query;
+public class ZeroShotClassificationRequest {
+  public static final String JSON_PROPERTY_CANDIDATE_LABELS = "candidate_labels";
+  private List<String> candidateLabels = new ArrayList<String>();
 
-  public static final String JSON_PROPERTY_SENTENCES = "sentences";
-  private List<String> sentences = new ArrayList<String>();
+  public static final String JSON_PROPERTY_SENTENCE = "sentence";
+  private String sentence;
 
-  public CrossEncodeInput() { 
+  public ZeroShotClassificationRequest() { 
   }
 
-  public CrossEncodeInput query(String query) {
+  public ZeroShotClassificationRequest candidateLabels(List<String> candidateLabels) {
     
-    this.query = query;
+    this.candidateLabels = candidateLabels;
+    return this;
+  }
+
+  public ZeroShotClassificationRequest addCandidateLabelsItem(String candidateLabelsItem) {
+    this.candidateLabels.add(candidateLabelsItem);
     return this;
   }
 
    /**
-   * Get query
-   * @return query
+   * Get candidateLabels
+   * @return candidateLabels
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_CANDIDATE_LABELS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public String getQuery() {
-    return query;
+  public List<String> getCandidateLabels() {
+    return candidateLabels;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_CANDIDATE_LABELS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setQuery(String query) {
-    this.query = query;
+  public void setCandidateLabels(List<String> candidateLabels) {
+    this.candidateLabels = candidateLabels;
   }
 
 
-  public CrossEncodeInput sentences(List<String> sentences) {
+  public ZeroShotClassificationRequest sentence(String sentence) {
     
-    this.sentences = sentences;
-    return this;
-  }
-
-  public CrossEncodeInput addSentencesItem(String sentencesItem) {
-    this.sentences.add(sentencesItem);
+    this.sentence = sentence;
     return this;
   }
 
    /**
-   * Get sentences
-   * @return sentences
+   * Get sentence
+   * @return sentence
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_SENTENCE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public List<String> getSentences() {
-    return sentences;
+  public String getSentence() {
+    return sentence;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_SENTENCE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSentences(List<String> sentences) {
-    this.sentences = sentences;
+  public void setSentence(String sentence) {
+    this.sentence = sentence;
   }
 
 
@@ -113,22 +113,22 @@ public class CrossEncodeInput {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CrossEncodeInput crossEncodeInput = (CrossEncodeInput) o;
-    return Objects.equals(this.query, crossEncodeInput.query) &&
-        Objects.equals(this.sentences, crossEncodeInput.sentences);
+    ZeroShotClassificationRequest zeroShotClassificationRequest = (ZeroShotClassificationRequest) o;
+    return Objects.equals(this.candidateLabels, zeroShotClassificationRequest.candidateLabels) &&
+        Objects.equals(this.sentence, zeroShotClassificationRequest.sentence);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(query, sentences);
+    return Objects.hash(candidateLabels, sentence);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CrossEncodeInput {\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    sentences: ").append(toIndentedString(sentences)).append("\n");
+    sb.append("class ZeroShotClassificationRequest {\n");
+    sb.append("    candidateLabels: ").append(toIndentedString(candidateLabels)).append("\n");
+    sb.append("    sentence: ").append(toIndentedString(sentence)).append("\n");
     sb.append("}");
     return sb.toString();
   }
