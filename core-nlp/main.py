@@ -1,5 +1,5 @@
 import torch
-from torch.nn import functional as F
+from sentence_transformers import util
 
 from AnswerQuestionRequest import AnswerQuestionRequest, AnswerQuestionResponse
 from models.CrossEncodeInput import CrossEncodeInput
@@ -8,8 +8,7 @@ from models.ScoredSentence import ScoredSentence
 from models.Sentences import Sentences
 from models.ZeroShotClassificationRequest import ZeroShotClassificationRequest
 from models.ZeroShotClassificationResponse import ZeroShotClassificationResponse, SingleLabelClassificationResult
-from shared_objects import cross_encoder, app, nlp, question_answer_model, question_answer_tokenizer, \
-    zero_shot_classification_tokenizer, zero_shot_classification_model
+from shared_objects import cross_encoder, app, nlp, question_answer_model, question_answer_tokenizer, classifier
 
 
 @app.post(
@@ -19,25 +18,18 @@ from shared_objects import cross_encoder, app, nlp, question_answer_model, quest
 def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShotClassificationResponse:
     sentence = request.sentence
     candidate_labels = request.candidate_labels
+    sentences = [sentence] + candidate_labels
+    embeddings = classifier.encode(sentences, convert_to_tensor=True)
+    cosine_scores = util.cos_sim(embeddings, embeddings)
 
-    inputs = zero_shot_classification_tokenizer.batch_encode_plus(
-        [sentence] + candidate_labels,
-        return_tensors='pt',
-        padding='longest',
-    )
-    input_ids = inputs['input_ids']
-    attention_mask = inputs['attention_mask']
-    output = zero_shot_classification_model(input_ids, attention_mask=attention_mask)[0]
-    sentence_rep = output[:1].mean(dim=1)
-    label_reps = output[1:].mean(dim=1)
+    scores = cosine_scores[0]
+    result = [
+        SingleLabelClassificationResult(label=candidate_labels[idx - 1], score=score)
+        for idx, score in enumerate(scores) if idx != 0
+    ]
+    result = sorted(result, key=lambda r: r.score, reverse=True)
 
-    print(output)
-    print(sentence_rep, label_reps)
-    similarities = F.cosine_similarity(sentence_rep, label_reps)
-    closest = similarities.argsort(descending=True)
-
-    results = [SingleLabelClassificationResult(label=candidate_labels[idx], score=similarities[idx]) for idx in closest]
-    return ZeroShotClassificationResponse(results=results)
+    return ZeroShotClassificationResponse(result=result)
 
 
 @app.post(
