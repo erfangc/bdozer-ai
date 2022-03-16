@@ -1,7 +1,7 @@
 import torch
 from sentence_transformers import util
 
-from AnswerQuestionRequest import AnswerQuestionRequest, AnswerQuestionResponse
+from models.AnswerQuestionRequest import AnswerQuestionResponse, AnswerQuestionRequest
 from models.CrossEncodeInput import CrossEncodeInput
 from models.DocInput import DocInput
 from models.ScoredSentence import ScoredSentence
