@@ -1,7 +1,8 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForQuestionAnswering
 
-cross_encoder_model = 'cross-encoder/ms-marco-MiniLM-L-6-v2'
-q_a_model = 'bert-large-uncased-whole-word-masking-finetuned-squad'
+cross_encoder_model_name = 'cross-encoder/ms-marco-MiniLM-L-6-v2'
+question_answer_model_name = 'bert-large-uncased-whole-word-masking-finetuned-squad'
+zero_shot_classification_model_name = 'facebook/bart-large-mnli'
 
 
 def save_pretrained_seq_classification(model_name: str):
@@ -37,5 +38,6 @@ def save_pretrained_question_answering(model_name: str):
 
 
 if __name__ == "__main__":
-    save_pretrained_seq_classification(cross_encoder_model)
-    save_pretrained_question_answering(q_a_model)
+    save_pretrained_seq_classification(cross_encoder_model_name)
+    save_pretrained_seq_classification(zero_shot_classification_model_name)
+    save_pretrained_question_answering(question_answer_model_name)

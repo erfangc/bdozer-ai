@@ -1,24 +1,56 @@
 import torch
+from torch.nn import functional as F
 
 from AnswerQuestionRequest import AnswerQuestionRequest, AnswerQuestionResponse
-from CrossEncodeInput import CrossEncodeInput
-from DocInput import DocInput
-from ScoredSentence import ScoredSentence
-from Sentences import Sentences
-from shared_objects import cross_encoder, app, nlp, q_a_model, q_a_tokenizer
+from models.CrossEncodeInput import CrossEncodeInput
+from models.DocInput import DocInput
+from models.ScoredSentence import ScoredSentence
+from models.Sentences import Sentences
+from models.ZeroShotClassificationRequest import ZeroShotClassificationRequest
+from models.ZeroShotClassificationResponse import ZeroShotClassificationResponse, SingleLabelClassificationResult
+from shared_objects import cross_encoder, app, nlp, question_answer_model, question_answer_tokenizer, \
+    zero_shot_classification_tokenizer, zero_shot_classification_model
+
+
+@app.post(
+    path="/zero_shot_classification",
+    response_model=ZeroShotClassificationResponse,
+)
+def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShotClassificationResponse:
+    sentence = request.sentence
+    candidate_labels = request.candidate_labels
+
+    inputs = zero_shot_classification_tokenizer.batch_encode_plus(
+        [sentence] + candidate_labels,
+        return_tensors='pt',
+        padding='longest',
+    )
+    input_ids = inputs['input_ids']
+    attention_mask = inputs['attention_mask']
+    output = zero_shot_classification_model(input_ids, attention_mask=attention_mask)[0]
+    sentence_rep = output[:1].mean(dim=1)
+    label_reps = output[1:].mean(dim=1)
+
+    print(output)
+    print(sentence_rep, label_reps)
+    similarities = F.cosine_similarity(sentence_rep, label_reps)
+    closest = similarities.argsort(descending=True)
+
+    results = [SingleLabelClassificationResult(label=candidate_labels[idx], score=similarities[idx]) for idx in closest]
+    return ZeroShotClassificationResponse(results=results)
 
 
 @app.post(
     path="/answer_question",
     response_model=list[AnswerQuestionResponse]
 )
-def classification(request: AnswerQuestionRequest) -> list[AnswerQuestionResponse]:
+def answer_question(request: AnswerQuestionRequest) -> list[AnswerQuestionResponse]:
     answers = []
     for question in request.questions:
-        inputs = q_a_tokenizer(question, request.context, add_special_tokens=True, return_tensors="pt")
+        inputs = question_answer_tokenizer(question, request.context, add_special_tokens=True, return_tensors="pt")
         input_ids = inputs["input_ids"].tolist()[0]
 
-        outputs = q_a_model(**inputs)
+        outputs = question_answer_model(**inputs)
         answer_start_scores = outputs.start_logits
         answer_end_scores = outputs.end_logits
 
@@ -27,8 +59,8 @@ def classification(request: AnswerQuestionRequest) -> list[AnswerQuestionRespons
         # Get the most likely end of answer with the argmax of the score
         answer_end = torch.argmax(answer_end_scores) + 1
 
-        answer = q_a_tokenizer.convert_tokens_to_string(
-            q_a_tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end])
+        answer = question_answer_tokenizer.convert_tokens_to_string(
+            question_answer_tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end])
         )
         answers.append(AnswerQuestionResponse(question=question, best_answer=answer))
     return answers
