@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   ZeroShotClassificationResponse.JSON_PROPERTY_RESULT
 })
 @JsonTypeName("ZeroShotClassificationResponse")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T21:02:09.915-04:00[America/New_York]")
 public class ZeroShotClassificationResponse {
   public static final String JSON_PROPERTY_RESULT = "result";
   private List<SingleLabelClassificationResult> result = new ArrayList<SingleLabelClassificationResult>();

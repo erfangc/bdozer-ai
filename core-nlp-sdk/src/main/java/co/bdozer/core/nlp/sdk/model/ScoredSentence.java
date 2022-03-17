@@ -34,7 +34,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   ScoredSentence.JSON_PROPERTY_SCORE
 })
 @JsonTypeName("ScoredSentence")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T21:02:09.915-04:00[America/New_York]")
 public class ScoredSentence {
   public static final String JSON_PROPERTY_SENTENCE = "sentence";
   private String sentence;

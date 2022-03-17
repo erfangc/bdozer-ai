@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   AnswerQuestionRequest.JSON_PROPERTY_CONTEXT
 })
 @JsonTypeName("AnswerQuestionRequest")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-15T21:47:53.313-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T21:02:09.915-04:00[America/New_York]")
 public class AnswerQuestionRequest {
   public static final String JSON_PROPERTY_QUESTIONS = "questions";
   private List<String> questions = new ArrayList<String>();

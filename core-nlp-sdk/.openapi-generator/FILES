@@ -39,8 +39,3 @@ src/main/java/co/bdozer/core/nlp/sdk/model/SingleLabelClassificationResult.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ValidationError.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationRequest.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationResponse.java
-src/test/java/co/bdozer/core/nlp/sdk/model/AnswerQuestionRequestTest.java
-src/test/java/co/bdozer/core/nlp/sdk/model/AnswerQuestionResponseTest.java
-src/test/java/co/bdozer/core/nlp/sdk/model/SingleLabelClassificationResultTest.java
-src/test/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationRequestTest.java
-src/test/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationResponseTest.java
