@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class CrossEncodeInput(BaseModel):
-    query: str
-    sentences: list[str]
+    reference: str
+    comparisons: list[str]

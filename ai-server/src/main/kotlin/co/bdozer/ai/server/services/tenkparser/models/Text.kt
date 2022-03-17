@@ -17,10 +17,12 @@ data class Text(
     val docUrl: String,
     val sentence: String,
     val namedEntities: List<NamedEntity> = emptyList(),
-    val hasProductScore: Double?,
-    val hasCompetitorScore: Double?,
-    val hasRiskFactorScore: Double?,
-    val hasCostScore: Double?,
+    val productScore1: Double? = null,
+    val productScore2: Double? = null,
+    val productScore3: Double? = null,
+    val competitorScore: Double? = null,
+    val riskFactorScore: Double? = null,
+    val costScore: Double?,
     val topics: List<Topic> = emptyList(),
 )
 

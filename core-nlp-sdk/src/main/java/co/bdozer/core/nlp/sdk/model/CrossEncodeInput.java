@@ -31,77 +31,77 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * CrossEncodeInput
  */
 @JsonPropertyOrder({
-  CrossEncodeInput.JSON_PROPERTY_QUERY,
-  CrossEncodeInput.JSON_PROPERTY_SENTENCES
+  CrossEncodeInput.JSON_PROPERTY_REFERENCE,
+  CrossEncodeInput.JSON_PROPERTY_COMPARISONS
 })
 @JsonTypeName("CrossEncodeInput")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T21:02:09.915-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T22:29:38.042-04:00[America/New_York]")
 public class CrossEncodeInput {
-  public static final String JSON_PROPERTY_QUERY = "query";
-  private String query;
+  public static final String JSON_PROPERTY_REFERENCE = "reference";
+  private String reference;
 
-  public static final String JSON_PROPERTY_SENTENCES = "sentences";
-  private List<String> sentences = new ArrayList<String>();
+  public static final String JSON_PROPERTY_COMPARISONS = "comparisons";
+  private List<String> comparisons = new ArrayList<String>();
 
   public CrossEncodeInput() { 
   }
 
-  public CrossEncodeInput query(String query) {
+  public CrossEncodeInput reference(String reference) {
     
-    this.query = query;
+    this.reference = reference;
     return this;
   }
 
    /**
-   * Get query
-   * @return query
+   * Get reference
+   * @return reference
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_REFERENCE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public String getQuery() {
-    return query;
+  public String getReference() {
+    return reference;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_QUERY)
+  @JsonProperty(JSON_PROPERTY_REFERENCE)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setQuery(String query) {
-    this.query = query;
+  public void setReference(String reference) {
+    this.reference = reference;
   }
 
 
-  public CrossEncodeInput sentences(List<String> sentences) {
+  public CrossEncodeInput comparisons(List<String> comparisons) {
     
-    this.sentences = sentences;
+    this.comparisons = comparisons;
     return this;
   }
 
-  public CrossEncodeInput addSentencesItem(String sentencesItem) {
-    this.sentences.add(sentencesItem);
+  public CrossEncodeInput addComparisonsItem(String comparisonsItem) {
+    this.comparisons.add(comparisonsItem);
     return this;
   }
 
    /**
-   * Get sentences
-   * @return sentences
+   * Get comparisons
+   * @return comparisons
   **/
   @javax.annotation.Nonnull
   @ApiModelProperty(required = true, value = "")
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_COMPARISONS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
 
-  public List<String> getSentences() {
-    return sentences;
+  public List<String> getComparisons() {
+    return comparisons;
   }
 
 
-  @JsonProperty(JSON_PROPERTY_SENTENCES)
+  @JsonProperty(JSON_PROPERTY_COMPARISONS)
   @JsonInclude(value = JsonInclude.Include.ALWAYS)
-  public void setSentences(List<String> sentences) {
-    this.sentences = sentences;
+  public void setComparisons(List<String> comparisons) {
+    this.comparisons = comparisons;
   }
 
 
@@ -114,21 +114,21 @@ public class CrossEncodeInput {
       return false;
     }
     CrossEncodeInput crossEncodeInput = (CrossEncodeInput) o;
-    return Objects.equals(this.query, crossEncodeInput.query) &&
-        Objects.equals(this.sentences, crossEncodeInput.sentences);
+    return Objects.equals(this.reference, crossEncodeInput.reference) &&
+        Objects.equals(this.comparisons, crossEncodeInput.comparisons);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(query, sentences);
+    return Objects.hash(reference, comparisons);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class CrossEncodeInput {\n");
-    sb.append("    query: ").append(toIndentedString(query)).append("\n");
-    sb.append("    sentences: ").append(toIndentedString(sentences)).append("\n");
+    sb.append("    reference: ").append(toIndentedString(reference)).append("\n");
+    sb.append("    comparisons: ").append(toIndentedString(comparisons)).append("\n");
     sb.append("}");
     return sb.toString();
   }

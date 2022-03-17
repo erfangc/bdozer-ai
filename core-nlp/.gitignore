@@ -1,4 +1,6 @@
 cross-encoder/ms-marco-MiniLM-L-6-v2
+bert-large-uncased-whole-word-masking-finetuned-squad
+facebook
 
 ### Python template
 # Byte-compiled / optimized / DLL files

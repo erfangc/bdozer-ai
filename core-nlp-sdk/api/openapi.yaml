@@ -154,22 +154,22 @@ components:
       type: object
     CrossEncodeInput:
       example:
-        sentences:
-        - sentences
-        - sentences
-        query: query
+        reference: reference
+        comparisons:
+        - comparisons
+        - comparisons
       properties:
-        query:
-          title: Query
+        reference:
+          title: Reference
           type: string
-        sentences:
+        comparisons:
           items:
             type: string
-          title: Sentences
+          title: Comparisons
           type: array
       required:
-      - query
-      - sentences
+      - comparisons
+      - reference
       title: CrossEncodeInput
       type: object
     DocInput:

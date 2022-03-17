@@ -26,7 +26,7 @@ import co.bdozer.core.nlp.sdk.auth.ApiKeyAuth;
 import co.bdozer.core.nlp.sdk.ApiResponseDecoder;
 
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T21:02:09.915-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T22:29:38.042-04:00[America/New_York]")
 public class ApiClient {
   private static final Logger log = Logger.getLogger(ApiClient.class.getName());
 

@@ -4,13 +4,16 @@ import co.bdozer.ai.server.services.tenkparser.models.Text
 import co.bdozer.ai.server.services.tenkparser.models.Topic
 import co.bdozer.core.nlp.sdk.ApiClient
 import co.bdozer.core.nlp.sdk.api.DefaultApi
+import co.bdozer.core.nlp.sdk.model.CrossEncodeInput
 import co.bdozer.core.nlp.sdk.model.DocInput
 import co.bdozer.core.nlp.sdk.model.ZeroShotClassificationRequest
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.commons.codec.digest.DigestUtils
 import org.elasticsearch.action.bulk.BulkRequest
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.client.RequestOptions
 import org.elasticsearch.client.RestHighLevelClient
+import org.elasticsearch.common.xcontent.XContentType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
@@ -26,6 +29,7 @@ class TenKParser(
 
     private final val secEndpoint = "https://www.sec.gov"
     private final val apiClient = ApiClient()
+    private final val objectMapper = jacksonObjectMapper().findAndRegisterModules()
     private final val log = LoggerFactory.getLogger(TenKParser::class.java)
 
     init {
@@ -35,6 +39,7 @@ class TenKParser(
     private val coreNlp = apiClient.buildClient(DefaultApi::class.java)
 
     fun parseTenK(cik: String, ash: String) {
+        var totalSentences = 0
 
         val original10K = original10K(cik, ash)
         val docUrl =
@@ -45,20 +50,7 @@ class TenKParser(
             cik,
             ash,
         )
-        val tenK = Jsoup.connect(docUrl).get()
-        val spans = spans(tenK)
 
-        val start = System.currentTimeMillis()
-        log.info("Calling NLP server with spans size={}", spans.size)
-        val sentences = spans.flatMap { span ->
-            coreNlp.getSentences(DocInput().doc(span)).sentences
-        }.filterNotNull()
-        val stop = System.currentTimeMillis()
-        log.info(
-            "NLP server returned {} sentences in {}s",
-            sentences.size,
-            TimeUnit.SECONDS.convert(stop - start, TimeUnit.MILLISECONDS),
-        )
 
         /*
         For each sentence - turn them into a `Text` instance and populate all the fields by calling core-nlp
@@ -71,19 +63,43 @@ class TenKParser(
                 asOfDate = asOfDate(docUrl),
                 lastUpdated = Instant.now(),
             )
-        val texts = sentences.map { toText(sentence = it, meta = meta) }
-        index(texts)
+
+        val tenK = Jsoup.connect(docUrl).get()
+        val spans = spans(tenK)
+
+        val start = System.currentTimeMillis()
+        log.info("Calling NLP server with spans size={}", spans.size)
+        val sentences = spans.flatMapIndexed { idx, span ->
+            log.info("Calling sentence_producer idx={}, totalSentences={}", idx, totalSentences)
+            val sentences = coreNlp.getSentences(DocInput().doc(span)).sentences.filterNotNull()
+            log.info(
+                "Calling classification and cross encoder, sentences.size={}, totalSentences={}",
+                sentences.size,
+                totalSentences
+            )
+            val texts = sentences.map { toText(sentence = it, meta = meta) }
+            index(texts)
+            totalSentences += sentences.size
+            sentences
+        }
+        val stop = System.currentTimeMillis()
+        log.info(
+            "NLP server returned {} sentences in {}s",
+            sentences.size,
+            TimeUnit.SECONDS.convert(stop - start, TimeUnit.MILLISECONDS),
+        )
     }
 
     private fun index(texts: List<Text>) {
         val bulkRequest = BulkRequest()
         for (text in texts) {
             val indexRequest = IndexRequest("texts")
-            indexRequest.source(text)
+            val json = objectMapper.writeValueAsString(text)
+            indexRequest.source(json, XContentType.JSON)
             bulkRequest.add(indexRequest)
         }
         val took = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT).took
-        log.info("Indexing {} texts took {}", texts.size, took)
+        log.info("Indexing texts texts.size={}, took={}, total={}", texts.size, took)
     }
 
     // TODO FIX THIS
@@ -108,6 +124,28 @@ class TenKParser(
         val productQuestion3 = "What do we sell?"
         val costQuestion = "What are our biggest costs?"
 
+        val crossEncodeInput = CrossEncodeInput()
+            .reference(sentence)
+            .comparisons(
+                listOf(
+                    competitorQuestion,
+                    riskFactorQuestion,
+                    productQuestion1,
+                    productQuestion2,
+                    productQuestion3,
+                    costQuestion,
+                )
+            )
+
+        val scoredSentences = coreNlp.crossEncode(crossEncodeInput)
+
+        val competitorScore = scoredSentences.find { it.sentence == competitorQuestion }?.score?.toDouble()
+        val productScore1 = scoredSentences.find { it.sentence == productQuestion1 }?.score?.toDouble()
+        val productScore2 = scoredSentences.find { it.sentence == productQuestion2 }?.score?.toDouble()
+        val productScore3 = scoredSentences.find { it.sentence == productQuestion3 }?.score?.toDouble()
+        val riskFactorScore = scoredSentences.find { it.sentence == riskFactorQuestion }?.score?.toDouble()
+        val costScore = scoredSentences.find { it.sentence == costQuestion }?.score?.toDouble()
+
         return Text(
             textId = generateId(sentence, meta),
             type = "10-K",
@@ -119,10 +157,12 @@ class TenKParser(
             docUrl = meta.docUrl,
             sentence = sentence,
             namedEntities = emptyList(),
-            hasCompetitorScore = 0.0,
-            hasProductScore = 0.0,
-            hasCostScore = 0.0,
-            hasRiskFactorScore = 0.0,
+            competitorScore = competitorScore,
+            productScore1 = productScore1,
+            productScore2 = productScore2,
+            productScore3 = productScore3,
+            costScore = costScore,
+            riskFactorScore = riskFactorScore,
             topics = topics(sentence)
         )
     }

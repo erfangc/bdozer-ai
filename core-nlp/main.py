@@ -78,12 +78,12 @@ def sentence_producer(doc_input: DocInput) -> Sentences:
     response_model=list[ScoredSentence]
 )
 def cross_encode(cross_encode_input: CrossEncodeInput) -> list[ScoredSentence]:
-    print(f'running cross encoder for {cross_encode_input.query}')
-    query = cross_encode_input.query
-    sentences = cross_encode_input.sentences
-    model_input = [[query, sent] for sent in sentences]
+    print(f'running cross encoder for {cross_encode_input.reference}')
+    references = cross_encode_input.reference
+    comparisons = cross_encode_input.comparisons
+    model_input = [[references, sent] for sent in comparisons]
     cross_scores = cross_encoder.predict(model_input)
-    model_output = list(zip(cross_scores.tolist(), sentences))
+    model_output = list(zip(cross_scores.tolist(), comparisons))
     ret = [
         ScoredSentence(score=elm[0], sentence=elm[1]) for elm in
         sorted(model_output, key=lambda x: x[0], reverse=True)
