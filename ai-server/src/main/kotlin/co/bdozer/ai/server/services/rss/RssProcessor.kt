@@ -49,6 +49,7 @@ class RssProcessor {
     }
 
     private fun cikAsh(url: String): CikAsh? {
+
         val regex = "$secEndpoint/Archives/edgar/data/(\\d+)/(\\d+)/.*".toRegex()
         val matchResult = regex.matchEntire(url)
         val groups = matchResult?.groups
