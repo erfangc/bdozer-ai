@@ -38,7 +38,7 @@ class TenKParser(
 
     private val coreNlp = apiClient.buildClient(DefaultApi::class.java)
 
-    fun parseTenK(cik: String, ash: String) {
+    fun parse10k(cik: String, ash: String) {
         var totalSentences = 0
 
         val original10K = original10K(cik, ash)

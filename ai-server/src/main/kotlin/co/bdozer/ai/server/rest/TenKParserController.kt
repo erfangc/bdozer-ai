@@ -12,9 +12,9 @@ class TenKParserController(private val tenKParser: TenKParser) {
 
     private val executor = Executors.newCachedThreadPool()
 
-    @PostMapping("ten-k-parser")
-    fun parseTenK(@RequestParam cik: String, @RequestParam ash: String): ParseTenKAcknowledgement {
-        executor.execute { tenKParser.parseTenK(cik = cik, ash = ash) }
+    @PostMapping("parse-10k")
+    fun parse10k(@RequestParam cik: String, @RequestParam ash: String): ParseTenKAcknowledgement {
+        executor.execute { tenKParser.parse10k(cik = cik, ash = ash) }
         return ParseTenKAcknowledgement(status = "Submitted", timestamp = Instant.now())
     }
 
