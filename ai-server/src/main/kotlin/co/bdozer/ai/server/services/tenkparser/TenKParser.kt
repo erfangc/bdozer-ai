@@ -103,8 +103,8 @@ class TenKParser(
             indexRequest.source(json, XContentType.JSON)
             bulkRequest.add(indexRequest)
         }
-        val took = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT).took
-        log.info("Indexing texts texts.size={}, took={}, total={}", texts.size, took)
+        val bulkResponse = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT)
+        log.info("Indexing texts texts.size={}, took={}, total={}", texts.size, bulkResponse.took)
     }
 
     // TODO FIX THIS
@@ -228,15 +228,12 @@ class TenKParser(
             }
         }
         log.info("DFS from $startAnchor to $endAnchor found {} nodes", visited.size)
-        return visited
-            .map { element ->
-                element
-                    .childNodes()
-                    .filterNotNull()
-                    .find { it is TextNode }?.let { (it as TextNode).text() }
-            }
-            .filterNotNull()
-            .filterNot { it.isNotBlank() }
+        return visited.mapNotNull { element ->
+            element
+                .childNodes()
+                .filterNotNull()
+                .find { it is TextNode }?.let { (it as TextNode).text() }
+        }.filter { it.isNotBlank() }
     }
 
     private fun original10K(cik: String, ash: String): String {
