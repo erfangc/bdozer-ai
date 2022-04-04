@@ -17,10 +17,13 @@ import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.common.xcontent.XContentType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import org.jsoup.nodes.TextNode
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.LocalDate
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -67,11 +70,11 @@ class TenKParser(
             )
 
         val tenK = Jsoup.connect(docUrl).get()
-        val spans = spans(tenK)
+        val paragraphs = toParagraphs(cik, ash, tenK)
 
         val start = System.currentTimeMillis()
-        log.info("Calling NLP server with spans size={}", spans.size)
-        val sentences = spans.flatMapIndexed { idx, span ->
+        log.info("Calling NLP server with spans size={}", paragraphs.size)
+        val sentences = paragraphs.flatMapIndexed { idx, span ->
             log.info("Calling sentence_producer idx={}, totalSentences={}", idx, totalSentences)
             val sentences = coreNlp.getSentences(DocInput().doc(span)).sentences.filterNotNull()
             log.info(
@@ -195,15 +198,45 @@ class TenKParser(
             .map { Topic(name = it.label, score = it.score.toDouble()) }
     }
 
-    private fun spans(doc: Document): List<String> {
-        return doc.root()
-            .select("span")
-            .filter {
-                val isNotEmpty = it.text().isNotEmpty()
-                val tokens = it.text().split(" ")
-                isNotEmpty && tokens.size > 10
+    /**
+     * Scan through the document and extract only the relevant sections
+     * e.g - Business, Risk Factor using SectionFinder as a helper
+     */
+    private fun toParagraphs(cik: String, ash: String, doc: Document): List<String> {
+        val sections = sectionParser.findSections(cik, ash)
+        val startAnchor = sections.business.startAnchor ?: error("Cannot find a business section")
+        val endAnchor = sections.business.endAnchor?.replaceFirst("#", "")
+
+        val start =
+            doc.select(startAnchor).first()
+                ?: error("Cannot find element referenced by business section $startAnchor")
+        // keep track of everything we've found in order
+        val visited = arrayListOf<Element>()
+        val stack = Stack<Element>()
+        val maxCount = 1000
+        stack.addAll(start.children())
+        stack.addAll(start.nextElementSiblings().reversed())
+        var endAnchorReached = false
+
+        while (stack.isNotEmpty() && !endAnchorReached && visited.size <= maxCount) {
+            val element = stack.pop()
+            if (element.id() == endAnchor) {
+                endAnchorReached = true
+            } else {
+                stack.addAll(element.children().reversed())
+                visited.add(element)
             }
-            .map { it.text() }
+        }
+        log.info("DFS from $startAnchor to $endAnchor found {} nodes", visited.size)
+        return visited
+            .map { element ->
+                element
+                    .childNodes()
+                    .filterNotNull()
+                    .find { it is TextNode }?.let { (it as TextNode).text() }
+            }
+            .filterNotNull()
+            .filterNot { it.isNotBlank() }
     }
 
     private fun original10K(cik: String, ash: String): String {
