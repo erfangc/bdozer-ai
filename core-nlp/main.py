@@ -13,6 +13,7 @@ from shared_objects import cross_encoder, app, nlp, question_answer_model, quest
 
 @app.post(
     path="/zero_shot_classification",
+    operation_id="zero_shot_classification",
     response_model=ZeroShotClassificationResponse,
 )
 def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShotClassificationResponse:

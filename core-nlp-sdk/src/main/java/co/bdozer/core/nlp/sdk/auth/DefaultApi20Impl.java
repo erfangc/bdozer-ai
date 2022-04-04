@@ -9,7 +9,7 @@ import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureURIQuery
 import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthentication;
 import com.github.scribejava.core.oauth2.clientauthentication.RequestBodyAuthenticationScheme;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-03-16T22:29:38.042-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-03T13:56:25.544-04:00[America/New_York]")
 public class DefaultApi20Impl extends DefaultApi20 {
 
     private final String accessTokenEndpoint;

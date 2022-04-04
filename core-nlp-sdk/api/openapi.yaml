@@ -7,7 +7,7 @@ servers:
 paths:
   /zero_shot_classification:
     post:
-      operationId: zero_shot_classification_zero_shot_classification_post
+      operationId: zero_shot_classification
       requestBody:
         content:
           application/json:
@@ -102,7 +102,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/ScoredSentence'
-                title: Response Cross Encode Cross Encode Post
+                title: Response Cross Encode
                 type: array
           description: Successful Response
         "422":

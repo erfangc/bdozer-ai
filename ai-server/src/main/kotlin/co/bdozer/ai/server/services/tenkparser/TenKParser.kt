@@ -1,5 +1,6 @@
 package co.bdozer.ai.server.services.tenkparser
 
+import co.bdozer.ai.server.services.sectionparser.SectionParser
 import co.bdozer.ai.server.services.tenkparser.models.Text
 import co.bdozer.ai.server.services.tenkparser.models.Topic
 import co.bdozer.core.nlp.sdk.ApiClient
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class TenKParser(
     private val restHighLevelClient: RestHighLevelClient,
+    private val sectionParser: SectionParser,
 ) {
 
     private final val secEndpoint = "https://www.sec.gov"
@@ -171,7 +173,7 @@ class TenKParser(
         DigestUtils.sha256Hex(meta.docUrl + sentence)
 
     private fun topics(sentence: String): List<Topic> {
-        val response = coreNlp.zeroShotClassificationZeroShotClassificationPost(
+        val response = coreNlp.zeroShotClassification(
             ZeroShotClassificationRequest()
                 .sentence(sentence)
                 .candidateLabels(
