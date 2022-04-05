@@ -12,7 +12,6 @@ data class Text(
     val source: String,
     val cik: String,
     val ash: String,
-    val asOfDate: LocalDate,
     val lastUpdated: Instant,
     val docUrl: String,
     val sentence: String,

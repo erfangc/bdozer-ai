@@ -3,7 +3,7 @@ package co.bdozer.ai.server.services.sectionparser
 import co.bdozer.core.nlp.sdk.ApiClient
 import co.bdozer.core.nlp.sdk.api.DefaultApi
 import co.bdozer.core.nlp.sdk.model.ZeroShotClassificationRequest
-import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service
 @Service
 class SectionParser {
 
-    private val secEndpoint = "https://www.sec.gov"
     private val log = LoggerFactory.getLogger(SectionParser::class.java)
     private final val apiClient = ApiClient()
 
@@ -21,22 +20,14 @@ class SectionParser {
 
     private val coreNlp = apiClient.buildClient(DefaultApi::class.java)
 
-    fun findSections(cik: String, ash: String): TenKSections {
-
-        val original10K = original10K(cik, ash)
-        val url =
-            "${secEndpoint}/Archives/edgar/data/${cik}/${ash.padStart(length = 18, padChar = '0')}/$original10K"
-        println(url)
-
-        val doc = Jsoup.connect(url).get()
-
+    fun findSections(doc: Document): TenKSections {
         val tables = doc.select("table").take(10)
         val tableOfContent = tables.maxByOrNull { scoreTable(it) }
         val business = tableRowToSection(tableOfContent, "Item Business")
         val riskFactors = tableRowToSection(tableOfContent, "Risk Factors")
 
-        println(business)
-        println(riskFactors)
+        log.info("Parsed section={}", business)
+        log.info("Parsed section={}", riskFactors)
 
         return TenKSections(
             business = business,
@@ -107,18 +98,5 @@ class SectionParser {
             response.result.maxOf { it.score.toDouble() }
         }
 
-    }
-
-    private fun original10K(cik: String, ash: String): String {
-        val filingSummaryUrl =
-            "$secEndpoint/Archives/edgar/data/${cik}/${ash.padStart(length = 18, padChar = '0')}/FilingSummary.xml"
-        val doc = Jsoup.connect(filingSummaryUrl).get()
-        // find the main file instance
-        return doc
-            .select("InputFiles")
-            .select("File")
-            .find { it.attr("doctype") == "10-K" }
-            ?.text()
-            ?: error("Unable to find a FilingSummary.xml on $filingSummaryUrl")
     }
 }

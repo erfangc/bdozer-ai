@@ -35,12 +35,15 @@ def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShot
 
 @app.post(
     path="/answer_question",
+    operation_id="answer_question",
     response_model=list[AnswerQuestionResponse]
 )
 def answer_question(request: AnswerQuestionRequest) -> list[AnswerQuestionResponse]:
     answers = []
     for question in request.questions:
-        inputs = question_answer_tokenizer(question, request.context, add_special_tokens=True, return_tensors="pt")
+        inputs = question_answer_tokenizer(
+            question, request.context, add_special_tokens=True, return_tensors="pt"
+        )
         input_ids = inputs["input_ids"].tolist()[0]
 
         outputs = question_answer_model(**inputs)

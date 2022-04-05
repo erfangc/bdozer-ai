@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   AnswerQuestionResponse.JSON_PROPERTY_BEST_ANSWER
 })
 @JsonTypeName("AnswerQuestionResponse")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-03T13:56:25.544-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-04T19:25:20.493-04:00[America/New_York]")
 public class AnswerQuestionResponse {
   public static final String JSON_PROPERTY_QUESTION = "question";
   private String question;

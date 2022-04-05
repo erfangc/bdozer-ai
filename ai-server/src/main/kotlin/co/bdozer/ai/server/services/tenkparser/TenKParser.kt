@@ -5,6 +5,7 @@ import co.bdozer.ai.server.services.tenkparser.models.Text
 import co.bdozer.ai.server.services.tenkparser.models.Topic
 import co.bdozer.core.nlp.sdk.ApiClient
 import co.bdozer.core.nlp.sdk.api.DefaultApi
+import co.bdozer.core.nlp.sdk.model.AnswerQuestionRequest
 import co.bdozer.core.nlp.sdk.model.CrossEncodeInput
 import co.bdozer.core.nlp.sdk.model.DocInput
 import co.bdozer.core.nlp.sdk.model.ZeroShotClassificationRequest
@@ -22,7 +23,6 @@ import org.jsoup.nodes.TextNode
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.time.LocalDate
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -49,28 +49,25 @@ class TenKParser(
         val original10K = original10K(cik, ash)
         val docUrl =
             "$secEndpoint/Archives/edgar/data/$cik/${ash.padStart(length = 18, padChar = '0')}/$original10K"
-        log.info(
-            "Retrieving document from docUrl={}, cik={}, ash={}",
-            docUrl,
-            cik,
-            ash,
-        )
+        log.info("Retrieving document from docUrl={}, cik={}, ash={}", docUrl, cik, ash)
 
 
         /*
-        For each sentence - turn them into a `Text` instance and populate all the fields by calling core-nlp
+        For each sentence 
+        - Turn them into a `Text` instance and populate all the fields by calling core-nlp
          */
         val meta =
             DocMeta(
                 cik = cik,
                 ash = ash,
                 docUrl = docUrl,
-                asOfDate = asOfDate(docUrl),
                 lastUpdated = Instant.now(),
             )
 
         val tenK = Jsoup.connect(docUrl).get()
-        val paragraphs = toParagraphs(cik, ash, tenK)
+        val paragraphs = toParagraphs(tenK)
+
+        readWindowAndFindAnswer(paragraphs)
 
         val start = System.currentTimeMillis()
         log.info("Calling NLP server with spans size={}", paragraphs.size)
@@ -107,27 +104,52 @@ class TenKParser(
         log.info("Indexing texts texts.size={}, took={}, total={}", texts.size, bulkResponse.took)
     }
 
-    // TODO FIX THIS
-    private fun asOfDate(docUrl: String): LocalDate {
-        return LocalDate.now()
-    }
-
     data class DocMeta(
         val cik: String,
         val ash: String,
         val docUrl: String,
-        val asOfDate: LocalDate,
         val lastUpdated: Instant,
     )
 
+    private fun readWindowAndFindAnswer(sentences: List<String>) {
+        /*
+        We use a window size of ten to answer our questions. This means at any given point in time
+        the Q&A transformer model will see the concatenation of 10 questions
+         */
+        val windowSize = 6
+        for (i in 0 until (sentences.size - windowSize)) {
+            val buffer = sentences.subList(i, i + windowSize)
+            val paragraph = buffer.joinToString(" ").let {
+                if (it.length > 512) {
+                    it.substring(0, 512)
+                } else {
+                    it
+                }
+            }
+            
+            val questions = listOf("What do we do?", "What do we sell?")
+            val responses = coreNlp.answerQuestion(
+                AnswerQuestionRequest()
+                    .context(paragraph)
+                    .questions(questions)
+            )
+            log.info("------------------------------------------------------------------------------------------")
+            log.info("Paragraph: {}", paragraph)
+            responses.forEach { questionResponse ->
+                log.info("Question: {}\nAnswer: {}", questionResponse.question, questionResponse.bestAnswer)
+            }
+            log.info("------------------------------------------------------------------------------------------")
+        }
+    }
+
     private fun toText(sentence: String, meta: DocMeta): Text {
 
-        val competitorQuestion = "Who are our competitors?"
-        val riskFactorQuestion = "What are our biggest risks?"
-        val productQuestion1 = "What products do we produce?"
-        val productQuestion2 = "What products or services do we provide?"
-        val productQuestion3 = "What do we sell?"
-        val costQuestion = "What are our biggest costs?"
+        val competitorQuestion = "Competition"
+        val riskFactorQuestion = "Risk Factor"
+        val productQuestion1 = "What do we do?"
+        val productQuestion2 = "What service do we provide?"
+        val productQuestion3 = "What product do we make?"
+        val costQuestion = "Cost"
 
         val crossEncodeInput = CrossEncodeInput()
             .reference(sentence)
@@ -157,7 +179,6 @@ class TenKParser(
             source = secEndpoint,
             cik = meta.cik,
             ash = meta.ash,
-            asOfDate = meta.asOfDate,
             lastUpdated = meta.lastUpdated,
             docUrl = meta.docUrl,
             sentence = sentence,
@@ -181,12 +202,13 @@ class TenKParser(
                 .sentence(sentence)
                 .candidateLabels(
                     listOf(
-                        "Inflation",
-                        "COVID-19",
-                        "Gas Prices",
-                        "Russian Ukraine War",
-                        "Politics",
-                        "Election",
+                        "Risk",
+                        "Product",
+                        "Services",
+                        "Competitor",
+                        "Cost",
+                        "Supplier",
+                        "Input Cost",
                     )
                 )
         )
@@ -202,8 +224,8 @@ class TenKParser(
      * Scan through the document and extract only the relevant sections
      * e.g - Business, Risk Factor using SectionFinder as a helper
      */
-    private fun toParagraphs(cik: String, ash: String, doc: Document): List<String> {
-        val sections = sectionParser.findSections(cik, ash)
+    private fun toParagraphs(doc: Document): List<String> {
+        val sections = sectionParser.findSections(doc)
         val startAnchor = sections.business.startAnchor ?: error("Cannot find a business section")
         val endAnchor = sections.business.endAnchor?.replaceFirst("#", "")
 

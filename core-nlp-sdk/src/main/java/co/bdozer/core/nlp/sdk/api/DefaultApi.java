@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import feign.*;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-03T13:56:25.544-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-04T19:25:20.493-04:00[America/New_York]")
 public interface DefaultApi extends ApiClient.Api {
 
 
@@ -35,11 +35,11 @@ public interface DefaultApi extends ApiClient.Api {
     "Content-Type: application/json",
     "Accept: application/json",
   })
-  List<AnswerQuestionResponse> answerQuestionAnswerQuestionPost(AnswerQuestionRequest answerQuestionRequest);
+  List<AnswerQuestionResponse> answerQuestion(AnswerQuestionRequest answerQuestionRequest);
 
   /**
    * Answer Question
-   * Similar to <code>answerQuestionAnswerQuestionPost</code> but it also returns the http response headers .
+   * Similar to <code>answerQuestion</code> but it also returns the http response headers .
    * 
    * @param answerQuestionRequest  (required)
    * @return A ApiResponse that wraps the response boyd and the http headers.
@@ -49,7 +49,7 @@ public interface DefaultApi extends ApiClient.Api {
     "Content-Type: application/json",
     "Accept: application/json",
   })
-  ApiResponse<List<AnswerQuestionResponse>> answerQuestionAnswerQuestionPostWithHttpInfo(AnswerQuestionRequest answerQuestionRequest);
+  ApiResponse<List<AnswerQuestionResponse>> answerQuestionWithHttpInfo(AnswerQuestionRequest answerQuestionRequest);
 
 
 
