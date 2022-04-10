@@ -79,8 +79,8 @@ class TenKParser(
                 sentences.size,
                 totalSentences
             )
-            val texts = sentences.map { toText(sentence = it, meta = meta) }
-            index(texts)
+//            val texts = sentences.map { toText(sentence = it, meta = meta) }
+//            index(texts)
             totalSentences += sentences.size
             sentences
         }
@@ -112,11 +112,13 @@ class TenKParser(
     )
 
     private fun readWindowAndFindAnswer(sentences: List<String>) {
+        
         /*
         We use a window size of ten to answer our questions. This means at any given point in time
         the Q&A transformer model will see the concatenation of 10 questions
          */
         val windowSize = 6
+        
         for (i in 0 until (sentences.size - windowSize)) {
             val buffer = sentences.subList(i, i + windowSize)
             val paragraph = buffer.joinToString(" ").let {
@@ -126,20 +128,25 @@ class TenKParser(
                     it
                 }
             }
-            
-            val questions = listOf("What do we do?", "What do we sell?")
+
+            val question = "What do we do?"
+            val questions = listOf(question)
             val responses = coreNlp.answerQuestion(
                 AnswerQuestionRequest()
                     .context(paragraph)
                     .questions(questions)
             )
-            log.info("------------------------------------------------------------------------------------------")
+            val crossEncode = coreNlp.crossEncode(CrossEncodeInput().reference(question).comparisons(listOf(paragraph)))
             log.info("Paragraph: {}", paragraph)
             responses.forEach { questionResponse ->
                 log.info("Question: {}\nAnswer: {}", questionResponse.question, questionResponse.bestAnswer)
             }
-            log.info("------------------------------------------------------------------------------------------")
+            for (scoredSentence in crossEncode) {
+                log.info("Score: {}", scoredSentence.score)
+            }
+            log.info("------------------------------------------------------------------------------------")
         }
+        
     }
 
     private fun toText(sentence: String, meta: DocMeta): Text {
