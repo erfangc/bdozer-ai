@@ -20,7 +20,7 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-
+ten-k-parser/target
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
