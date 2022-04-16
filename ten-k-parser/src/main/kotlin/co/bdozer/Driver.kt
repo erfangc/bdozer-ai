@@ -1,7 +1,6 @@
 package co.bdozer
 
 import co.bdozer.models.CompanyTicker
-import co.bdozer.models.Recent
 import co.bdozer.models.Submission
 import co.bdozer.sectionparser.Section
 import co.bdozer.sectionparser.SectionParser
