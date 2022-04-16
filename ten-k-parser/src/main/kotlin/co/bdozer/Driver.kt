@@ -44,13 +44,18 @@ import kotlin.system.exitProcess
 
 private val log: Logger = LoggerFactory.getLogger("Driver")
 
-private val objectMapper =
-    jacksonObjectMapper().findAndRegisterModules().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+private val objectMapper = jacksonObjectMapper()
+        .findAndRegisterModules()
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-private val restHighlevelClient = RestHighLevelClient(RestClient.builder(HttpHost("localhost", 9200)))
+val httpHost = HttpHost("localhost", 9200)
+private val restHighLevelClient = RestHighLevelClient(
+    RestClient.builder(httpHost)
+)
 
 fun main() {
+    
     val tickers = FileInputStream("ten-k-parser/tickers.txt")
         .bufferedReader()
         .readLines()
@@ -70,7 +75,9 @@ fun main() {
             log.error("Exception occurred while processing ticker={}, error={}", ticker, e.message)
         }
     }
+    
     exitProcess(0)
+    
 }
 
 private fun processSingleCompany(
@@ -102,7 +109,7 @@ private fun processSingleCompany(
     val body = Element("body")
     elements.forEach { body.appendChild(it) }
 
-    log.info("bodySize={}", body.toString().utf8Size())
+    log.info("Processed HTML bodySize={}", body.toString().utf8Size())
     val textBody = HttpClient.newHttpClient().send(
         HttpRequest.newBuilder().POST(BodyPublishers.ofString(body.toString())).header("Content-Type", "text/plain")
             .uri(URI.create("http://localhost:3000/convert")).build(),
@@ -125,7 +132,7 @@ private fun processSingleCompany(
         companyName = submission.name ?: "Unknown",
         timestamp = Instant.now().toString(),
     )
-    val indexResponse = restHighlevelClient.index(
+    val indexResponse = restHighLevelClient.index(
         IndexRequest("filings").source(objectMapper.writeValueAsString(esFiling), XContentType.JSON),
         RequestOptions.DEFAULT,
     )
