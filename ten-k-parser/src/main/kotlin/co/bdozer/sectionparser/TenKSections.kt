@@ -1,6 +1,6 @@
 package co.bdozer.sectionparser
 
 data class TenKSections(
-    val business: Section,
-    val riskFactors: Section,
+    val business: TenKSection,
+    val riskFactors: TenKSection,
 )

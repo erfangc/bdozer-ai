@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/bdozer-ai.iml" filepath="$PROJECT_DIR$/.idea/bdozer-ai.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp/core-nlp.iml" filepath="$PROJECT_DIR$/core-nlp/core-nlp.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" filepath="$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/html-to-text-converter/html-to-text-converter.iml" filepath="$PROJECT_DIR$/html-to-text-converter/html-to-text-converter.iml" />
       <module fileurl="file://$PROJECT_DIR$/ten-k-parser/ten-k-parser.iml" filepath="$PROJECT_DIR$/ten-k-parser/ten-k-parser.iml" />
     </modules>
   </component>

@@ -2,10 +2,11 @@
 
 This is a multimodule project with both Kotlin and Python code
 
-The Python code hosts Pytorch/HuggingFace transformer models that exposes API operations for
-embedding / comparing sentences 
+There are `3` servers/components to run
 
-The Kotlin code handles ETL, metadata decoration and CRUD of the raw data sources
+- `core-nlp` a Python FastAPI application that uses HuggingFace models to host endpoints for zero-shot classification and sentence tokenization
+- `html-to-text-converter` NodeJS expressed based microservice to convert DOM to nicely formatted plaintext
+- `ai-server` a Kotlin Spring Boot server that uses the other services as well as OpenAPI GPT3 APIs to orchestrate semantic search and facilitate main business logic
 
 # Get Started
 

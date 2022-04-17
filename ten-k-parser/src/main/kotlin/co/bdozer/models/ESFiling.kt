@@ -1,4 +1,4 @@
-package co.bdozer
+package co.bdozer.models
 
 data class ESFiling(
     val cik: String,
