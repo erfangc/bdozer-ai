@@ -25,7 +25,7 @@ class TenKSectionExtractor {
      * Item 1, 1A sections DOM elements from it
      */
     fun extractSections(doc: Document): TenKSections {
-        val tables = doc.select("table").take(10)
+        val tables = doc.select("table").take(55)
         val tableOfContent = tables.maxByOrNull { scoreTable(it) }
         
         val business = tableRowToSection(tableOfContent, "Item Business")
@@ -87,12 +87,14 @@ class TenKSectionExtractor {
     private fun scoreTable(table: Element): Double {
         val expectedRows = listOf(
             "Item Business",
+            "1. Business",
             "Item Risk Factors",
+            "1A Risk Factors",
             "Item Unresolved Staff Comments",
         )
         // find max score for each expected row them sum them to 
         // determine the relevance of the entire table
-        return expectedRows.sumOf { expectedRow ->
+        val score = expectedRows.sumOf { expectedRow ->
             val tableRows = table.select("tr").map { it.text() }
             val response = coreNlp.zeroShotClassification(
                 ZeroShotClassificationRequest()
@@ -101,6 +103,8 @@ class TenKSectionExtractor {
             )
             response.result.maxOf { it.score.toDouble() }
         }
+        log.info("Scoring toc candidate ${table.text()} score=${score}")
+        return score
 
     }
 

@@ -13,6 +13,7 @@ import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.index.query.TermQueryBuilder
 import org.elasticsearch.search.builder.SearchSourceBuilder
+import java.io.File
 import java.io.PrintWriter
 import kotlin.system.exitProcess
 
@@ -20,40 +21,42 @@ fun localElasticsearch(): RestHighLevelClient {
     return RestHighLevelClient(RestClient.builder(HttpHost("localhost", 9200)))
 }
 
-fun objectMapper():ObjectMapper {
+fun objectMapper(): ObjectMapper {
     return jacksonObjectMapper()
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 }
 
 const val separator =
-    "------------------------------------------------------------------------------------------------------------------------"
+    "------------------------------------------------------------" +
+    "------------------------------------------------------------"
+
 fun main() {
     val restHighLevelClient = localElasticsearch()
     val objectMapper = objectMapper()
+    val tickers = File("ten-k-parser/tickers.txt")
+        .readLines()
 
-    val searchRequest = SearchRequest("filings").source(
-        SearchSourceBuilder
-            .searchSource()
-            .query(TermQueryBuilder("ticker.keyword", "BLK"))
-    )
-    val searchResponse = restHighLevelClient.search(
-        searchRequest, RequestOptions.DEFAULT
-    )
-    val hits = searchResponse.hits.hits
+    for (ticker in tickers) {
+        val searchRequest = SearchRequest("filings").source(
+            SearchSourceBuilder
+                .searchSource()
+                .query(TermQueryBuilder("ticker.keyword", ticker))
+        )
+        val searchResponse = restHighLevelClient.search(
+            searchRequest, RequestOptions.DEFAULT
+        )
+        val hits = searchResponse.hits.hits
+        val hit = hits.firstOrNull()
+        if (hit != null) {
+            val esFiling = objectMapper.readValue<ESFiling>(hit.sourceAsString)
+            val pages = esFiling.text.split(separator)
 
-    val hit = hits.firstOrNull() ?: error("...")
-
-    val esFiling = objectMapper.readValue<ESFiling>(hit.sourceAsString)
-    
-    val pages =
-        esFiling.text.split(separator)
-
-    val writer = PrintWriter("blk.jsonl")
-    for (page in pages) {
-        writer.println(objectMapper.writeValueAsString(OpenAIJsonL(text = page, metadata = hit.id)))
+            val writer = PrintWriter("ten-k-parser/output/$ticker.out")
+            writer.println(pages.firstOrNull())
+            writer.close()
+        }
     }
-    writer.close()
-    
+
     exitProcess(0)
 }

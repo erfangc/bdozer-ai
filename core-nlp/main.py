@@ -22,6 +22,7 @@ def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShot
     sentences = [sentence] + candidate_labels
     embeddings = classifier.encode(sentences, convert_to_tensor=True)
     cosine_scores = util.cos_sim(embeddings, embeddings)
+    print(f"sentence={sentence} candidate_labels={candidate_labels}")
 
     scores = cosine_scores[0]
     result = [
