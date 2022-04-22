@@ -2,7 +2,9 @@ package co.bdozer.ai.server
 
 import co.bdozer.core.nlp.sdk.ApiClient
 import co.bdozer.core.nlp.sdk.api.DefaultApi
+import org.apache.http.Header
 import org.apache.http.HttpHost
+import org.apache.http.message.BasicHeader
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestHighLevelClient
 import org.springframework.context.annotation.Bean
@@ -14,11 +16,17 @@ class ServerConfiguration {
 
     @Bean
     fun restHighLevelClient(): RestHighLevelClient {
-        val uri = URI.create(
-            System.getenv("ELASTICSEARCH_ENDPOINT") ?: "http://localhost:9200"
-        )
+        val elasticsearchEndpoint = System.getenv("ELASTICSEARCH_ENDPOINT") ?: "http://localhost:9200"
+        val elasticsearchCredential = System.getenv("ELASTICSEARCH_CREDENTIAL") ?: ""
+        
+        val uri = URI.create(elasticsearchEndpoint)
         val httpHost = HttpHost(uri.host, uri.port, uri.scheme)
-        return RestHighLevelClient(RestClient.builder(httpHost))
+        val headers = arrayOf(BasicHeader("Authorization", "Basic $elasticsearchCredential"))
+        
+        val builder = RestClient
+            .builder(httpHost)
+            .setDefaultHeaders(headers)
+        return RestHighLevelClient(builder)
     }
 
     @Bean
@@ -27,5 +35,5 @@ class ServerConfiguration {
         apiClient.basePath = System.getenv("CORE_NLP_ENDPOINT") ?: "http://localhost:8000"
         return apiClient.buildClient(DefaultApi::class.java)
     }
-    
+
 }
