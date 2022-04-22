@@ -15,10 +15,15 @@ import org.elasticsearch.index.query.TermQueryBuilder
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import java.io.File
 import java.io.PrintWriter
+import java.net.URI
 import kotlin.system.exitProcess
 
 fun localElasticsearch(): RestHighLevelClient {
-    return RestHighLevelClient(RestClient.builder(HttpHost("localhost", 9200)))
+    val uri = URI.create(
+        System.getenv("ELASTICSEARCH_ENDPOINT") ?: "http://localhost:9200"
+    )
+    val httpHost = HttpHost(uri.host, uri.port, uri.scheme)
+    return RestHighLevelClient(RestClient.builder(httpHost))
 }
 
 fun objectMapper(): ObjectMapper {
@@ -29,7 +34,7 @@ fun objectMapper(): ObjectMapper {
 
 const val separator =
     "------------------------------------------------------------" +
-    "------------------------------------------------------------"
+            "------------------------------------------------------------"
 
 fun main() {
     val restHighLevelClient = localElasticsearch()
