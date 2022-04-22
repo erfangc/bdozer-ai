@@ -22,7 +22,7 @@ src/main/java/co/bdozer/core/nlp/sdk/RFC3339DateFormat.java
 src/main/java/co/bdozer/core/nlp/sdk/ServerConfiguration.java
 src/main/java/co/bdozer/core/nlp/sdk/ServerVariable.java
 src/main/java/co/bdozer/core/nlp/sdk/StringUtil.java
-src/main/java/co/bdozer/core/nlp/sdk/api/DefaultApi.java
+src/main/java/co/bdozer/core/nlp/sdk/api/CoreNlpApi.java
 src/main/java/co/bdozer/core/nlp/sdk/auth/ApiKeyAuth.java
 src/main/java/co/bdozer/core/nlp/sdk/auth/DefaultApi20Impl.java
 src/main/java/co/bdozer/core/nlp/sdk/auth/HttpBasicAuth.java
@@ -39,3 +39,4 @@ src/main/java/co/bdozer/core/nlp/sdk/model/SingleLabelClassificationResult.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ValidationError.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationRequest.java
 src/main/java/co/bdozer/core/nlp/sdk/model/ZeroShotClassificationResponse.java
+src/test/java/co/bdozer/core/nlp/sdk/api/CoreNlpApiTest.java

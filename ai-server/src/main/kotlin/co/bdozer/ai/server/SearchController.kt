@@ -1,6 +1,6 @@
 package co.bdozer.ai.server
 
-import co.bdozer.core.nlp.sdk.api.DefaultApi
+import co.bdozer.core.nlp.sdk.api.CoreNlpApi
 import co.bdozer.core.nlp.sdk.model.CrossEncodeInput
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SearchController(
     private val restHighLevelClient: RestHighLevelClient,
-    private val coreNLP: DefaultApi,
+    private val coreNLP: CoreNlpApi,
     private val objectMapper: ObjectMapper,
 ) {
 

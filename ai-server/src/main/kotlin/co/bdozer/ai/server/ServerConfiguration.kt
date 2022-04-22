@@ -1,6 +1,7 @@
 package co.bdozer.ai.server
 
 import co.bdozer.core.nlp.sdk.ApiClient
+import co.bdozer.core.nlp.sdk.api.CoreNlpApi
 import co.bdozer.core.nlp.sdk.api.DefaultApi
 import org.apache.http.Header
 import org.apache.http.HttpHost
@@ -30,10 +31,10 @@ class ServerConfiguration {
     }
 
     @Bean
-    fun coreNLP(): DefaultApi {
+    fun coreNLP(): CoreNlpApi {
         val apiClient = ApiClient()
         apiClient.basePath = System.getenv("CORE_NLP_ENDPOINT") ?: "http://localhost:8000"
-        return apiClient.buildClient(DefaultApi::class.java)
+        return apiClient.buildClient(CoreNlpApi::class.java)
     }
 
 }

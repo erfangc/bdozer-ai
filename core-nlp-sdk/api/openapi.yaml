@@ -28,6 +28,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Zero Shot Classification
+      tags:
+      - CoreNLP
       x-contentType: application/json
       x-accepts: application/json
   /answer_question:
@@ -46,7 +48,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/AnswerQuestionResponse'
-                title: Response Answer Question
+                title: Response Answer Question Answer Question Post
                 type: array
           description: Successful Response
         "422":
@@ -56,6 +58,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Answer Question
+      tags:
+      - CoreNLP
       x-contentType: application/json
       x-accepts: application/json
   /sentence_producer:
@@ -83,6 +87,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Sentence Producer
+      tags:
+      - CoreNLP
       x-contentType: application/json
       x-accepts: application/json
   /cross_encode:
@@ -102,7 +108,7 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/ScoredSentence'
-                title: Response Cross Encode
+                title: Response Cross Encode Cross Encode Post
                 type: array
           description: Successful Response
         "422":
@@ -112,6 +118,8 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Cross Encode
+      tags:
+      - CoreNLP
       x-contentType: application/json
       x-accepts: application/json
 components:

@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   ValidationError.JSON_PROPERTY_TYPE
 })
 @JsonTypeName("ValidationError")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-04T19:25:20.493-04:00[America/New_York]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-22T19:20:31.952-04:00[America/New_York]")
 public class ValidationError {
   public static final String JSON_PROPERTY_LOC = "loc";
   private List<String> loc = new ArrayList<String>();

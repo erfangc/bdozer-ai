@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import feign.*;
 
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-22T19:18:51.950-04:00[America/New_York]")
-public interface DefaultApi extends ApiClient.Api {
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2022-04-22T19:20:31.952-04:00[America/New_York]")
+public interface CoreNlpApi extends ApiClient.Api {
 
 
   /**

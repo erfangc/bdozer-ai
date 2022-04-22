@@ -14,6 +14,7 @@ from shared_objects import cross_encoder, app, nlp, question_answer_model, quest
 @app.post(
     path="/zero_shot_classification",
     operation_id="zero_shot_classification",
+    tags=["CoreNLP"],
     response_model=ZeroShotClassificationResponse,
 )
 def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShotClassificationResponse:
@@ -37,6 +38,7 @@ def zero_shot_classification(request: ZeroShotClassificationRequest) -> ZeroShot
 @app.post(
     path="/answer_question",
     operation_id="answer_question",
+    tags=["CoreNLP"],
     response_model=list[AnswerQuestionResponse]
 )
 def answer_question(request: AnswerQuestionRequest) -> list[AnswerQuestionResponse]:
@@ -67,6 +69,7 @@ def answer_question(request: AnswerQuestionRequest) -> list[AnswerQuestionRespon
     path="/sentence_producer",
     operation_id="get_sentences",
     description="""Turns a input document into sentences using `en_core_web_trf` transformer models""",
+    tags=["CoreNLP"],
     response_model=Sentences,
 )
 def sentence_producer(doc_input: DocInput) -> Sentences:
@@ -80,6 +83,7 @@ def sentence_producer(doc_input: DocInput) -> Sentences:
     path="/cross_encode",
     operation_id="cross_encode",
     description="Cross Encoder",
+    tags=["CoreNLP"],
     response_model=list[ScoredSentence]
 )
 def cross_encode(cross_encode_input: CrossEncodeInput) -> list[ScoredSentence]:
