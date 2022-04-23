@@ -7,7 +7,6 @@
       <module fileurl="file://$PROJECT_DIR$/core-nlp/core-nlp.iml" filepath="$PROJECT_DIR$/core-nlp/core-nlp.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" filepath="$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" />
       <module fileurl="file://$PROJECT_DIR$/ten-k-parser/crawler.iml" filepath="$PROJECT_DIR$/ten-k-parser/crawler.iml" />
-      <module fileurl="file://$PROJECT_DIR$/html-to-text-converter/html-to-text-converter.iml" filepath="$PROJECT_DIR$/html-to-text-converter/html-to-text-converter.iml" />
     </modules>
   </component>
 </project>
