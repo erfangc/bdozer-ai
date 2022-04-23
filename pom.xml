@@ -13,7 +13,7 @@
     <modules>
         <module>core-nlp-sdk</module>
         <module>ai-server</module>
-        <module>ten-k-parser</module>
+        <module>crawler</module>
     </modules>
     
     <properties>
