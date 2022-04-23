@@ -44,14 +44,14 @@ class SearchController(
         val scoredSentences = coreNLP.crossEncode(
             CrossEncodeInput().reference(query).comparisons(chunks)
         )
-        val averageScore = scoredSentences.map { it.score.toDouble() }.average()
+        val averageScore = scoredSentences.maxOfOrNull { it.score.toDouble() }
         log.info(
             "Scoring filing ticker={} averageScore={}, sentences and scores as follows:", filing.ticker, averageScore
         )
         scoredSentences.forEach { scoredSentence ->
             log.info("text={}, score={}", scoredSentence.sentence, scoredSentence.score)
         }
-        return averageScore
+        return averageScore ?: Double.NEGATIVE_INFINITY
     }
 
     private fun searchFilings(query: String): List<ESFiling> {
@@ -64,6 +64,6 @@ class SearchController(
     }
 
     private fun searchRequest(query: String) = SearchRequest("filings").source(
-        SearchSourceBuilder.searchSource().query(QueryBuilders.matchQuery("text", query))
+        SearchSourceBuilder.searchSource().query(QueryBuilders.matchQuery("text", query)).size(10)
     )
 }

@@ -25,7 +25,7 @@ class TenKSectionExtractor {
      * Item 1, 1A sections DOM elements from it
      */
     fun extractSections(doc: Document): TenKSections {
-        val tables = doc.select("table").take(55)
+        val tables = doc.select("table").take(20)
         val tableOfContent = tables.maxByOrNull { scoreTable(it) }
         
         val business = tableRowToSection(tableOfContent, "Item Business")

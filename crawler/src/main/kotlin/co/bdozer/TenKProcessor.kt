@@ -93,14 +93,7 @@ class TenKProcessor {
         elements.forEach { body.appendChild(it) }
 
         log.info("Processed HTML bodySize={}", body.toString().utf8Size())
-        val textBody = HttpClient.newHttpClient().send(
-            HttpRequest
-                .newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
-                .header("Content-Type", "text/plain")
-                .uri(URI.create("http://localhost:3000/convert")).build(),
-            HttpResponse.BodyHandlers.ofString(),
-        ).body()
+        val textBody = HtmlToPlainText().getPlainText(body)
 
         // ------------------------------
         // Put the extracted data into ES
