@@ -9,10 +9,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ten-k-parser</artifactId>
+    <artifactId>crawler</artifactId>
     <packaging>jar</packaging>
 
-    <name>co.bdozer ten-k-parser</name>
+    <name>crawler</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

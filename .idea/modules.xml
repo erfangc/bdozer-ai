@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/bdozer-ai.iml" filepath="$PROJECT_DIR$/.idea/bdozer-ai.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp/core-nlp.iml" filepath="$PROJECT_DIR$/core-nlp/core-nlp.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" filepath="$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ten-k-parser/crawler.iml" filepath="$PROJECT_DIR$/ten-k-parser/crawler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawler/crawler.iml" filepath="$PROJECT_DIR$/crawler/crawler.iml" />
     </modules>
   </component>
 </project>

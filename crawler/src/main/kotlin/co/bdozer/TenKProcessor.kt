@@ -1,5 +1,6 @@
 package co.bdozer
 
+import co.bdozer.HashGenerator.hash
 import co.bdozer.models.CompanyTicker
 import co.bdozer.models.ESFiling
 import co.bdozer.models.Submission
@@ -24,13 +25,12 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.security.MessageDigest
 import java.time.Instant
 
 class TenKProcessor {
+    
     private val log = LoggerFactory.getLogger(TenKProcessor::class.java)
     private val httpHost = HttpHost("localhost", 9200)
-    private val digest: MessageDigest = MessageDigest.getInstance("SHA-256")
     private val restHighLevelClient = RestHighLevelClient(RestClient.builder(httpHost))
     private val objectMapper: ObjectMapper =
         jacksonObjectMapper()
@@ -38,25 +38,8 @@ class TenKProcessor {
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    private val tickerMap = objectMapper.readValue<Map<String, CompanyTicker>>(FileInputStream("ten-k-parser/company_tickers.json"))
-
-    fun hash(vararg components: String): String {
-        val str = components.joinToString()
-        return bytesToHex(digest.digest(str.encodeToByteArray()))
-    }
-
-    private fun bytesToHex(hash: ByteArray): String {
-        val hexString = StringBuilder(2 * hash.size)
-        for (i in hash.indices) {
-            val hex = Integer.toHexString(0xff and hash[i].toInt())
-            if (hex.length == 1) {
-                hexString.append('0')
-            }
-            hexString.append(hex)
-        }
-        return hexString.toString()
-    }
-
+    private val tickerMap = objectMapper.readValue<Map<String, CompanyTicker>>(FileInputStream("crawler/company_tickers.json"))
+    
     private fun getSubmission(cik: String): Submission {
         val inputStream = HttpClient.newHttpClient().send(
             HttpRequest.newBuilder().GET().uri(URI.create("https://data.sec.gov/submissions/CIK${cik}.json")).build(),

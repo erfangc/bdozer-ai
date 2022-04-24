@@ -6,7 +6,7 @@ import kotlin.system.exitProcess
 
 fun main() {
     val log = LoggerFactory.getLogger("Driver")
-    val tickers = FileInputStream("ten-k-parser/tickers.txt").bufferedReader().readLines().map { it.trim() }
+    val tickers = FileInputStream("crawler/tickers.txt").bufferedReader().readLines().map { it.trim() }
         .filter { it.isNotBlank() }
 
     val tenKProcessor = TenKProcessor()
