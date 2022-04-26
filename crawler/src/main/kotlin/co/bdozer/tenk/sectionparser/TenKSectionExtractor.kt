@@ -1,4 +1,4 @@
-package co.bdozer.sectionparser
+package co.bdozer.tenk.sectionparser
 
 import co.bdozer.core.nlp.sdk.ApiClient
 import co.bdozer.core.nlp.sdk.api.DefaultApi

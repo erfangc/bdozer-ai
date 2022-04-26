@@ -1,4 +1,4 @@
-package co.bdozer.models
+package co.bdozer.tenk.models
 
 data class Filings(
     val files: List<File>? = null,

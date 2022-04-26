@@ -1,4 +1,4 @@
-package co.bdozer
+package co.bdozer.utils
 
 import org.jsoup.internal.StringUtil
 import org.jsoup.nodes.Element
@@ -24,13 +24,13 @@ import org.jsoup.select.NodeVisitor
  *
  * @author Jonathan Hedley, jonathan@hedley.net
  */
-class HtmlToPlainText {
+object HtmlToPlainText {
     /**
      * Format an Element to plain-text
      * @param element the root element to format
      * @return formatted text
      */
-    fun getPlainText(element: Element?): String {
+    fun plainText(element: Element?): String {
         val formatter = FormattingVisitor()
         NodeTraversor.traverse(formatter, element!!) // walk the DOM, and call .head() and .tail() for each node
         return formatter.toString()

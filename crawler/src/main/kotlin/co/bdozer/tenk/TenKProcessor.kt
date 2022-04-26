@@ -1,10 +1,12 @@
-package co.bdozer
+package co.bdozer.tenk
 
-import co.bdozer.HashGenerator.hash
-import co.bdozer.models.CompanyTicker
-import co.bdozer.models.ESFiling
-import co.bdozer.models.Submission
-import co.bdozer.sectionparser.TenKSectionExtractor
+import co.bdozer.utils.HashGenerator.hash
+import co.bdozer.utils.HtmlToPlainText
+import co.bdozer.tenk.models.CompanyTicker
+import co.bdozer.tenk.models.Submission
+import co.bdozer.tenk.models.TenK
+import co.bdozer.tenk.sectionparser.TenKSectionExtractor
+import co.bdozer.utils.HtmlToPlainText.plainText
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -25,10 +27,10 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.Instant
+import java.time.LocalDate
 
 class TenKProcessor {
-    
+
     private val log = LoggerFactory.getLogger(TenKProcessor::class.java)
     private val httpHost = HttpHost("localhost", 9200)
     private val restHighLevelClient = RestHighLevelClient(RestClient.builder(httpHost))
@@ -38,9 +40,10 @@ class TenKProcessor {
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
-    private val tickerMap = objectMapper.readValue<Map<String, CompanyTicker>>(FileInputStream("crawler/company_tickers.json"))
-    
-    private fun getSubmission(cik: String): Submission {
+    private val tickerMap =
+        objectMapper.readValue<Map<String, CompanyTicker>>(FileInputStream("crawler/company_tickers.json"))
+
+    private fun submission(cik: String): Submission {
         val inputStream = HttpClient.newHttpClient().send(
             HttpRequest.newBuilder().GET().uri(URI.create("https://data.sec.gov/submissions/CIK${cik}.json")).build(),
             HttpResponse.BodyHandlers.ofInputStream(),
@@ -48,7 +51,7 @@ class TenKProcessor {
         return objectMapper.readValue(inputStream)
     }
 
-    fun processSingleCompany(ticker: String) {
+    fun processTicker(ticker: String) {
 
         val company = tickerMap.entries.find { it.value.ticker == ticker }?.value ?: error("...")
         val cik = company.cik_str.padStart(length = 10, padChar = '0')
@@ -56,7 +59,7 @@ class TenKProcessor {
         // ------------------------------------------------------
         // Find the latest submission and print out the raw text
         // ------------------------------------------------------
-        val submission = getSubmission(cik)
+        val submission = submission(cik)
 
         val form = "10-K"
         val idx = submission.filings?.recent?.form?.indexOfFirst { it == form } ?: error("...")
@@ -75,32 +78,30 @@ class TenKProcessor {
         val body = Element("body")
         elements.forEach { body.appendChild(it) }
 
-        log.info("Processed HTML bodySize={}", body.toString().utf8Size())
-        val textBody = HtmlToPlainText().getPlainText(body)
+        val textBody = plainText(body)
 
         // ------------------------------
         // Put the extracted data into ES
         // ------------------------------
         val section = "Business"
-        val esFiling = ESFiling(
+        val tenK = TenK(
             cik = cik,
             ash = ash,
             url = url,
-            reportDate = reportDate,
             text = textBody,
             section = section,
-            form = form,
             ticker = ticker,
+            reportDate = LocalDate.parse(reportDate),
             companyName = submission.name ?: "Unknown",
-            timestamp = Instant.now().toString(),
         )
 
-        val json = objectMapper.writeValueAsString(esFiling)
+        val json = objectMapper.writeValueAsString(tenK)
         val indexResponse = restHighLevelClient.index(
-            IndexRequest("filings").id(hash(url, "business")).source(json, XContentType.JSON),
+            IndexRequest("ten-k").id(hash(url, "business")).source(json, XContentType.JSON),
             RequestOptions.DEFAULT,
         )
         log.info("Indexed document, result={}, ticker={}", indexResponse.result, ticker)
     }
 
 }
+

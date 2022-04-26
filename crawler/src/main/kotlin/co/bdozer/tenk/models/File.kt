@@ -1,4 +1,4 @@
-package co.bdozer.models
+package co.bdozer.tenk.models
 
 data class File(
     val filingCount: Int? = null,

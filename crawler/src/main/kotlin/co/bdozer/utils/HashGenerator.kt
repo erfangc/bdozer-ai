@@ -1,4 +1,4 @@
-package co.bdozer
+package co.bdozer.utils
 
 import java.security.MessageDigest
 

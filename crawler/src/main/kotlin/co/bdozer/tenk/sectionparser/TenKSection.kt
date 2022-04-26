@@ -1,4 +1,4 @@
-package co.bdozer.sectionparser
+package co.bdozer.tenk.sectionparser
 
 import org.jsoup.nodes.Element
 
