@@ -9,7 +9,7 @@ from download_pretrained_models import cross_encoder_model_name, question_answer
 
 app = FastAPI()
 
-nlp = spacy.load("en_core_web_trf")
+nlp = spacy.load('en_core_web_sm')
 cross_encoder = CrossEncoder(cross_encoder_model_name)
 
 question_answer_tokenizer = AutoTokenizer.from_pretrained(question_answer_model_name)

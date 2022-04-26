@@ -53,7 +53,8 @@ object HtmlToPlainText {
                     "h3",
                     "h4",
                     "h5",
-                    "tr"
+                    "tr",
+                    "div",
                 )
             ) append("\n")
         }
@@ -71,7 +72,8 @@ object HtmlToPlainText {
                     "h2",
                     "h3",
                     "h4",
-                    "h5"
+                    "h5",
+                    "div"
                 )
             ) append("\n") else if (name == "a") append(
                 String.format(" <%s>", node.absUrl("href"))

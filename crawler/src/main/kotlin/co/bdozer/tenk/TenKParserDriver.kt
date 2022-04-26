@@ -1,5 +1,6 @@
 package co.bdozer.tenk
 
+import co.bdozer.tenk.TenKProcessor.processTicker
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
 import kotlin.system.exitProcess
@@ -10,18 +11,28 @@ import kotlin.system.exitProcess
  */
 fun main() {
     val log = LoggerFactory.getLogger("Driver")
+    
     val tickers = FileInputStream("crawler/tickers.txt")
         .bufferedReader()
         .readLines()
         .map { it.trim() }
         .filter { it.isNotBlank() }
 
-    val tenKProcessor = TenKProcessor()
+    var remaining = tickers.size
+    var count = 0
+    var error = 0
+    var success = 0
+    
     for (ticker in tickers) {
         try {
-            tenKProcessor.processTicker(ticker)
+            log.info("Processing state error=$error count=$count success=$success remaining=$remaining ticker=$ticker")
+            remaining--
+            count++
+            processTicker(ticker)
+            success++
         } catch (e: Exception) {
             log.error("Exception occurred while processing ticker={}, error={}", ticker, e.message)
+            error++
         }
     }
     exitProcess(0)

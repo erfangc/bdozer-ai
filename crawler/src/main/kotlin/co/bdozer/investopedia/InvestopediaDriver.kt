@@ -2,6 +2,7 @@ package co.bdozer.investopedia
 
 import co.bdozer.utils.HashGenerator.hash
 import co.bdozer.utils.HtmlToPlainText
+import co.bdozer.utils.HtmlToPlainText.plainText
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -54,8 +55,7 @@ private fun visit(url: String): List<String> {
         val document = connect.get()
         val documentBody = document.getElementById("article-body_1-0")
         val title = document.selectFirst("title")?.text()
-        val formatter = HtmlToPlainText()
-        val text = formatter.plainText(documentBody)
+        val text = plainText(documentBody)
 
         val indexRequest = IndexRequest("investopedia")
         val obj = Investopedia(

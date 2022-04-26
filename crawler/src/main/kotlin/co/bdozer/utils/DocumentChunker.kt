@@ -1,6 +1,5 @@
 package co.bdozer.utils
 
-import co.bdozer.core.nlp.sdk.api.CoreNlpApi
 import co.bdozer.core.nlp.sdk.model.DocInput
 import org.slf4j.LoggerFactory
 
@@ -9,12 +8,14 @@ import org.slf4j.LoggerFactory
  * sentence in a chunk makes the chunk goes over the pre-defined length limit, then it would be included
  * in the next chunk. The idea is to always form chunks that consists of full sentences
  */
-class DocumentChunker(private val coreNLP: CoreNlpApi) {
+object DocumentChunker {
     
-    private val chunkSize = 512
+    private const val chunkSize = 512
+    private val coreNLP = Beans.coreNLP()
     private val log = LoggerFactory.getLogger(DocumentChunker::class.java)
     
     fun chunkDoc(doc: String): List<String> {
+        log.info("Chunking document into sentences, doc.length=${doc.length} chunkSize=$chunkSize")
         val start = System.currentTimeMillis()
         val sentences = coreNLP
             .getSentences(DocInput().doc(doc))
@@ -39,4 +40,5 @@ class DocumentChunker(private val coreNLP: CoreNlpApi) {
                 "processingTook=${processingStop - stop}ms")
         return ret
     }
+    
 }

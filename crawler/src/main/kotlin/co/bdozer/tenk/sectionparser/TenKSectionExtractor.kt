@@ -103,7 +103,6 @@ class TenKSectionExtractor {
             )
             response.result.maxOf { it.score.toDouble() }
         }
-        log.info("Scoring toc candidate ${table.text()} score=${score}")
         return score
 
     }
