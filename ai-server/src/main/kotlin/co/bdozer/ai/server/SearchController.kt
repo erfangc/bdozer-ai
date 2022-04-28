@@ -57,7 +57,9 @@ class SearchController(
     private fun scoreFiling(query: String, filing: TenK): Double {
         val chunks = filing.text.take(15000).chunked(500)
         val scoredSentences = coreNLP.crossEncode(
-            CrossEncodeInput().reference(query).comparisons(chunks)
+            CrossEncodeInput()
+                .reference(query)
+                .comparisons(chunks)
         )
         val averageScore = scoredSentences.maxOfOrNull { it.score.toDouble() }
         log.info(
