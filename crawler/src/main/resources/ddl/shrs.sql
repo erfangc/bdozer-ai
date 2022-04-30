@@ -5,6 +5,7 @@ create table shrs
     comp_name          varchar,
     fye                int,
     per_end_date       date,
+    per_type           char,
     active_ticker_flag varchar,
     shares_out         numeric,
     avg_d_shares       numeric,

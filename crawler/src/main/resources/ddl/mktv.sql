@@ -5,8 +5,9 @@ create table mktv
     comp_name          varchar,
     fye                int,
     per_end_date       date,
+    per_type           char,
     active_ticker_flag varchar,
     mkt_val            numeric,
     ep_val             numeric,
-    primary key (m_ticker)
+    primary key (m_ticker, per_end_date)
 );

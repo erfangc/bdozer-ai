@@ -15,6 +15,7 @@ create table fr
     per_cal_qtr                smallint,
 
     -- indicator columns
+    form_7_type                int,
     curr_ratio                 numeric,
     non_perform_asset_tot_loan numeric,
     loan_loss_reserve          numeric,
