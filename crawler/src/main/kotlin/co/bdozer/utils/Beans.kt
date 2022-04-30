@@ -11,6 +11,7 @@ import org.apache.http.message.BasicHeader
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestHighLevelClient
 import java.net.URI
+import java.net.http.HttpClient
 import java.time.Instant
 import java.time.LocalDate
 
@@ -27,6 +28,10 @@ object Beans {
             .builder(httpHost)
             .setDefaultHeaders(headers)
         return RestHighLevelClient(builder)
+    }
+    
+    fun httpClient():HttpClient {
+        return HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()
     }
     
     fun coreNLP(): CoreNlpApi {

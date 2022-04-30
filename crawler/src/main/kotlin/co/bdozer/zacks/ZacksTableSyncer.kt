@@ -1,12 +1,11 @@
 package co.bdozer.zacks
 
 import co.bdozer.utils.Beans
+import co.bdozer.utils.DataAccess
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.net.URI
-import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.sql.DriverManager
 import java.util.zip.ZipInputStream
 
 
@@ -23,16 +22,9 @@ object ZacksTableSyncer {
         "se" to URI.create("https://www.quandl.com/api/v3/datatables/ZACKS/SE?api_key=$quandlApiKey&qopts.export=true"),
     )
 
-    private val httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()
+    private val httpClient = Beans.httpClient()
     private val objectMapper = Beans.objectMapper()
-
-    /**
-     * JDBC
-     */
-    private val jdbcUrl = System.getenv("JDBC_URL") ?: "jdbc:postgresql://localhost:5432/postgres"
-    private val jdbcUsername = System.getenv("JDBC_USERNAME") ?: "postgres"
-    private val jdbcPassword = System.getenv("JDBC_PASSWORD")
-    private val conn = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
+    private val conn = DataAccess.connection
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread { conn.close() })
@@ -69,7 +61,7 @@ object ZacksTableSyncer {
     fun syncTables() {
         downloadLinks.keys.forEach { table -> syncTable(table) }
     }
-    
+
     fun syncTable(table: String) {
         truncate(table)
         val uri = downloadLinks[table]!!
@@ -107,14 +99,14 @@ object ZacksTableSyncer {
                         } else if (value.isEmpty()) {
                             null
                         } else {
-                            "'${value.replace("'","''")}'"
+                            "'${value.replace("'", "''")}'"
                         }
                     }
 
                     val sql = """
                         insert into $table (${keys.joinToString(",")}) values (${values.joinToString(",")})
                         """.trimIndent()
-                    
+
                     try {
                         val smt = conn.createStatement()
                         smt.execute(sql)
