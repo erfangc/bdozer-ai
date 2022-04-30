@@ -15,7 +15,6 @@ import java.time.Instant
 import java.time.LocalDate
 
 object Beans {
-
     fun restHighLevelClient(): RestHighLevelClient {
         val elasticsearchEndpoint = System.getenv("ELASTICSEARCH_ENDPOINT") ?: "http://localhost:9200"
         val elasticsearchCredential = System.getenv("ELASTICSEARCH_CREDENTIAL") ?: ""
