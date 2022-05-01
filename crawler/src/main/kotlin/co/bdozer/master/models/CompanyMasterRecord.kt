@@ -1,8 +1,11 @@
 package co.bdozer.master.models
 
 data class CompanyMasterRecord(
-    val id: String? = null,
-    val ticker: String? = null,
+    val id: String,
+    val ticker: String,
+    val cik: String?=null,
+    val exchange: String? = null,
+    val companyUrl: String? = null,
     val companyName: String? = null,
     val price: Double? = null,
     val marketCap: Double? = null,

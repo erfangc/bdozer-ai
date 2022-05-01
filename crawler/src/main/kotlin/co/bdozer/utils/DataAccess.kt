@@ -11,7 +11,7 @@ object DataAccess {
     private val jdbcPassword = System.getenv("JDBC_PASSWORD")
     val connection: Connection = DriverManager.getConnection(jdbcUrl, jdbcUsername, jdbcPassword)
     
-    fun query(sql: String): Sequence<Map<String, Any>> {
+    fun runSql(sql: String): Sequence<Map<String, Any?>> {
         
         val stmt = connection.createStatement()
         val resultSet = stmt.executeQuery(sql)
@@ -25,7 +25,7 @@ object DataAccess {
                     val columnType = metaData.getColumnType(columnIdx)
                     val columnName = metaData.getColumnName(columnIdx)
 
-                    val columnValue: Any = when (columnType) {
+                    val columnValue: Any? = when (columnType) {
                         Types.BINARY ->
                             resultSet.getBlob(columnIdx)
                         Types.VARCHAR ->
