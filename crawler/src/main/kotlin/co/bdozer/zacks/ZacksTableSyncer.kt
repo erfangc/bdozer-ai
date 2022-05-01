@@ -1,7 +1,7 @@
 package co.bdozer.zacks
 
 import co.bdozer.utils.Beans
-import co.bdozer.utils.DataAccess
+import co.bdozer.utils.Database
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.net.URI
 import java.net.http.HttpRequest
@@ -24,7 +24,7 @@ object ZacksTableSyncer {
 
     private val httpClient = Beans.httpClient()
     private val objectMapper = Beans.objectMapper()
-    private val conn = DataAccess.connection
+    private val conn = Database.connection
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread { conn.close() })
