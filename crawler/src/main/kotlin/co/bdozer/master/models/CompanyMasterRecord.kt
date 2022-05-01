@@ -1,14 +1,13 @@
-package co.bdozer.master
+package co.bdozer.master.models
 
 data class CompanyMasterRecord(
-    val id: String,
-    val ticker: String,
-    val companyName: String,
+    val id: String? = null,
+    val ticker: String? = null,
+    val companyName: String? = null,
     val price: Double? = null,
     val marketCap: Double? = null,
-    val freeCashFlowPerShare: Double? = null,
-    val operCashFlowPerShare: Double? = null,
-    val bookValPerShare: Double? = null,
+    val enterpriseValue: Double? = null,
+    val perShareMetrics: PerShareMetrics? = null,
     val totRevnu: Double? = null,
     val ebit: Double? = null,
     val ebitda: Double? = null,
@@ -16,9 +15,9 @@ data class CompanyMasterRecord(
     val totLiab: Double? = null,
     val totLtermDebt: Double? = null,
     val debtToEquity: Double? = null,
-    val basicNetEps: Double? = null,
-    val dilutedNetEps: Double? = null,
+    val salesGrowth: SalesGrowth? = null,
+    val earningsGrowth: EarningsGrowth? = null,
     val business: List<String> = emptyList(),
     val riskFactors: List<String> = emptyList(),
-    val products: List<String> = emptyList(),
 )
+
