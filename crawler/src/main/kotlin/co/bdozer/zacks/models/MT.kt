@@ -1,4 +1,4 @@
-package co.bdozer.zacks
+package co.bdozer.zacks.models
 
 import java.time.LocalDate
 

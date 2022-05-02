@@ -2,6 +2,7 @@ package co.bdozer.zacks
 
 import co.bdozer.utils.Beans
 import co.bdozer.utils.Database
+import co.bdozer.zacks.models.ZacksDownloadLink
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.net.URI
 import java.net.http.HttpRequest

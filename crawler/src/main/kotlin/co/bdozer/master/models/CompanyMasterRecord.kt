@@ -12,8 +12,8 @@ data class CompanyMasterRecord(
     val enterpriseValue: Double?,
     val perShareMetrics: PerShareMetrics?,
     val latestMetrics: LatestMetrics?,
-    val salesGrowth: SalesGrowth?,
-    val earningsGrowth: EarningsGrowth?,
+    val sales: Trend?,
+    val earnings: Trend?,
     val business: List<String>?,
     val riskFactors: List<String>?,
 )

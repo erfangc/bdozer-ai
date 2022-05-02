@@ -1,4 +1,4 @@
-package co.bdozer.zacks
+package co.bdozer.zacks.models
 
 data class File(
     val data_snapshot_time: String,

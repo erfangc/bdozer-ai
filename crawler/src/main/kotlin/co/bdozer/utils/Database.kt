@@ -27,7 +27,7 @@ object Database {
                     typeOf<Double>() -> resultSet.getDouble(name)
                     typeOf<Double?>() -> resultSet.getDouble(name)
                     typeOf<Instant>() -> resultSet.getTimestamp(name).toInstant()
-                    typeOf<Instant?>() -> resultSet.getTimestamp(name).toInstant()
+                    typeOf<Instant?>() -> resultSet.getTimestamp(name)?.toInstant()
                     typeOf<Int>() -> resultSet.getInt(name)
                     typeOf<Int?>() -> resultSet.getInt(name)
                     typeOf<Long>() -> resultSet.getLong(name)
@@ -39,7 +39,7 @@ object Database {
                     typeOf<BigDecimal>() -> resultSet.getBigDecimal(name)
                     typeOf<BigDecimal?>() -> resultSet.getBigDecimal(name)
                     typeOf<LocalDate>() -> resultSet.getDate(name).toLocalDate()
-                    typeOf<LocalDate?>() -> resultSet.getDate(name).toLocalDate()
+                    typeOf<LocalDate?>() -> resultSet.getDate(name)?.toLocalDate()
                     typeOf<Boolean>() -> resultSet.getBoolean(name)
                     typeOf<Boolean?>() -> resultSet.getBoolean(name)
                     else -> null
