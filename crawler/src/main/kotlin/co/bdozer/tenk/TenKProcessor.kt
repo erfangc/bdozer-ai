@@ -7,6 +7,8 @@ import co.bdozer.tenk.models.Submission
 import co.bdozer.tenk.models.TenK
 import co.bdozer.tenk.sectionparser.TenKSectionExtractor
 import co.bdozer.utils.Beans
+import co.bdozer.utils.Database
+import co.bdozer.utils.Database.runSql
 import co.bdozer.utils.DocumentChunker
 import co.bdozer.utils.DocumentChunker.chunkDoc
 import co.bdozer.utils.HtmlToPlainText.plainText
@@ -17,6 +19,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import okio.utf8Size
 import org.apache.http.HttpHost
+import org.elasticsearch.action.bulk.BulkRequest
+import org.elasticsearch.action.bulk.BulkRequestBuilder
 import org.elasticsearch.action.index.IndexRequest
 import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.client.RequestOptions
@@ -39,30 +43,28 @@ object TenKProcessor {
     private val objectMapper = Beans.objectMapper()
     private val restHighLevelClient = Beans.restHighLevelClient()
 
-    private val tickerMap =
-        objectMapper.readValue<Map<String, CompanyTicker>>(FileInputStream("crawler/company_tickers.json"))
-
     private fun submission(cik: String): Submission {
-        val inputStream = HttpClient
-            .newHttpClient()
-            .send(
-                HttpRequest
-                    .newBuilder()
-                    .GET()
-                    .uri(URI.create("https://data.sec.gov/submissions/CIK${cik}.json"))
-                    .build(),
-                HttpResponse
-                    .BodyHandlers
-                    .ofInputStream(),
-            )
-            .body()
+        val inputStream = HttpClient.newHttpClient().send(
+            HttpRequest.newBuilder().GET().uri(URI.create("https://data.sec.gov/submissions/CIK${cik}.json")).build(),
+            HttpResponse.BodyHandlers.ofInputStream(),
+        ).body()
         return objectMapper.readValue(inputStream)
     }
 
-    fun processTicker(ticker: String) {
+    private fun toCik(ticker: String): String {
+        val row = runSql(
+            sql = """
+            select cik from ids where ticker = '$ticker'
+        """.trimIndent()
+        ).first()
+        val cik = row["cik"]?.toString() ?: error("cannot find cik for ticker $ticker")
+        log.info("Resolved ticker $ticker to cik $cik")
+        return cik
+    }
 
-        val company = tickerMap.entries.find { it.value.ticker == ticker }?.value ?: error("cannot find ticker $ticker")
-        val cik = company.cik_str.padStart(length = 10, padChar = '0')
+    fun processTicker(ticker: String): List<TenK> {
+
+        val cik = toCik(ticker)
 
         // 
         // Find the latest submission and print out the raw text
@@ -97,35 +99,43 @@ object TenKProcessor {
         //
         // Index each section
         //
-        chunks
-            .filter { it.isNotBlank() }
-            .forEachIndexed { seqNo, chunk ->
-                val id = hash(url, "business", seqNo.toString())
-                val section = "Business"
-                val tenK = TenK(
-                    id = id,
-                    cik = cik,
-                    ash = ash,
-                    url = url,
-                    seqNo = seqNo,
-                    text = chunk,
-                    section = section,
-                    ticker = ticker,
-                    reportDate = LocalDate.parse(reportDate),
-                    companyName = submission.name ?: "Unknown",
-                )
+        return chunks.filter { it.isNotBlank() }.mapIndexed { seqNo, chunk ->
+            val id = hash(url, "business", seqNo.toString())
+            val section = "Business"
+            TenK(
+                id = id,
+                cik = cik,
+                ash = ash,
+                url = url,
+                seqNo = seqNo,
+                text = chunk,
+                section = section,
+                ticker = ticker,
+                reportDate = LocalDate.parse(reportDate),
+                companyName = submission.name ?: "Unknown",
+            )
+        }
 
-                val json = objectMapper.writeValueAsString(tenK)
-                val indexResponse = restHighLevelClient.index(
-                    IndexRequest("ten-k")
-                        .id(id)
-                        .source(json, XContentType.JSON),
-                    RequestOptions.DEFAULT,
-                )
+    }
 
-                log.info("Indexed document, result={}, ticker={} seqNo={}", indexResponse.result, ticker, seqNo)
-            }
+    fun indexTenKs(tenKs: List<TenK>) {
+        val indexRequests = tenKs.map { tenK ->
+            val json = objectMapper.writeValueAsString(tenK)
+            IndexRequest("ten-k").id(tenK.id).source(json, XContentType.JSON)
+        }
 
+        val bulkRequest = BulkRequest()
+        indexRequests.forEach { bulkRequest.add(it) }
+        val indexResponse = restHighLevelClient.bulk(
+            bulkRequest,
+            RequestOptions.DEFAULT,
+        )
+
+        log.info(
+            "BulkIndex complete, ingestTook=${indexResponse.ingestTook} items=${indexResponse.items.size}",
+            indexResponse.ingestTook,
+            indexResponse.items
+        )
     }
 
 }

@@ -12,7 +12,7 @@ object Polygon {
 
     private val objectMapper = Beans.objectMapper()
     private val httpClient = Beans.httpClient()
-    private val apiKey = System.getenv("POLYGON_API_KEY")
+    private val apiKey = System.getenv("POLYGON_API_KEY") ?: error("missing environment variable POLYGON_API_KEY")
 
     fun tickerDetailV3(ticker: String): TickerDetailV3 {
         val httpResponse = httpClient.send(

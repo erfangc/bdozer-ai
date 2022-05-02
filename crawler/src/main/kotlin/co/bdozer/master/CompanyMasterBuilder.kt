@@ -1,16 +1,21 @@
 package co.bdozer.master
 
 import co.bdozer.master.calculators.*
+import co.bdozer.master.models.AnswersFromTenKs
 import co.bdozer.master.models.CompanyMasterRecord
 import co.bdozer.master.models.MarketData
 import co.bdozer.polygon.Polygon.tickerDetailV3
 import co.bdozer.polygon.models.TickerDetailV3
+import co.bdozer.tenk.TenKProcessor
+import co.bdozer.tenk.models.TenK
 import co.bdozer.utils.Beans
+import com.fasterxml.jackson.databind.ObjectWriter
 import org.slf4j.LoggerFactory
 
 object CompanyMasterBuilder {
-    
+
     private val log = LoggerFactory.getLogger(CompanyMasterBuilder::class.java)
+    private val objectWriter: ObjectWriter = Beans.objectMapper().writerWithDefaultPrettyPrinter()
     fun buildCompanyRecord(ticker: String): CompanyMasterRecord {
         val tickerDetailV3 = tickerDetailV3(ticker)
         val marketCap = tickerDetailV3.results.market_cap
@@ -46,17 +51,74 @@ object CompanyMasterBuilder {
             marketCap = marketCap,
             price = price,
             perShareMetrics = perShareMetrics(rawData),
+            answersFromTenKs = null,
         )
 
-        val objectWriter = Beans.objectMapper().writerWithDefaultPrettyPrinter()
-        log.info(objectWriter.writeValueAsString(record))
-        
-        return record
+        /*
+        See what else we can learn from the company's TenKs
+         */
+        val record1 = addAnswersFromTenK(ticker, record)
+        log.info(objectWriter.writeValueAsString(record1))
+
+        return record1
+    }
+
+    private fun addAnswersFromTenK(
+        ticker: String,
+        record: CompanyMasterRecord
+    ): CompanyMasterRecord {
+        val tenKs = parseTenK(ticker)
+        val record1 = if (tenKs.isNotEmpty()) {
+            val first = tenKs.first()
+            val ash = first.ash
+            val url = first.url
+            val reportDate = first.reportDate
+
+            tenKs.map { tenK -> tenK.text }
+
+            val questions = listOf(
+                "What business are we in?",
+                "What products do we produce?",
+                "What services do we provide to our customers?",
+                "What is our primary business?",
+                "Who do we compete with?",
+                "Who are our customers or clients?",
+                "Do we sell directly to customers or through a distribution partner?",
+                "Are we direct to consumer (b2c), business to business (b2b) or both?",
+                "What are the biggest risks in our business?",
+                "What are competitive advantages?",
+                "How do we plan to grow our business going forward?",
+                "What are our biggest challenges?",
+                "What are the largest expenses the company incur?",
+            )
+
+            /*
+            For every question conduct a semantic search based on the tenK results
+             */
+            val answers = questions.map { question ->
+                QuestionAnswerMachine.answerQuestion(question, tenKs)
+            }
+            record.copy(
+                answersFromTenKs = AnswersFromTenKs(
+                    url = url,
+                    reportDate = reportDate,
+                    ash = ash,
+                    answers = answers,
+                )
+            )
+        } else {
+            record
+        }
+        return record1
+    }
+
+    private fun parseTenK(ticker: String): List<TenK> {
+        return TenKProcessor.processTicker(ticker = ticker)
     }
 
     private fun enterpriseValue(tickerDetailV3: TickerDetailV3, fcs: FCS): Double {
         val totLiab = fcs.quarters.first().tot_liab
         return tickerDetailV3.results.market_cap + (totLiab ?: 0.0)
     }
-    
+
 }
