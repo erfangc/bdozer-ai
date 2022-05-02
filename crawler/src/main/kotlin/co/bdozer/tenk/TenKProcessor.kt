@@ -1,36 +1,21 @@
 package co.bdozer.tenk
 
 import co.bdozer.utils.HashGenerator.hash
-import co.bdozer.utils.HtmlToPlainText
-import co.bdozer.tenk.models.CompanyTicker
 import co.bdozer.tenk.models.Submission
 import co.bdozer.tenk.models.TenK
 import co.bdozer.tenk.sectionparser.TenKSectionExtractor
 import co.bdozer.utils.Beans
-import co.bdozer.utils.Database
 import co.bdozer.utils.Database.runSql
-import co.bdozer.utils.DocumentChunker
 import co.bdozer.utils.DocumentChunker.chunkDoc
 import co.bdozer.utils.HtmlToPlainText.plainText
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import okio.utf8Size
-import org.apache.http.HttpHost
 import org.elasticsearch.action.bulk.BulkRequest
-import org.elasticsearch.action.bulk.BulkRequestBuilder
 import org.elasticsearch.action.index.IndexRequest
-import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.client.RequestOptions
-import org.elasticsearch.client.RestClient
-import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.common.xcontent.XContentType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
-import java.io.FileInputStream
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -62,7 +47,7 @@ object TenKProcessor {
         return cik
     }
 
-    fun processTicker(ticker: String): List<TenK> {
+    fun buildTenKs(ticker: String): List<TenK> {
 
         val cik = toCik(ticker)
 
@@ -90,6 +75,7 @@ object TenKProcessor {
         elements.forEach { body.appendChild(it) }
 
         val textBody = plainText(body)
+        log.info("10-K text:\n$textBody")
 
         //
         // Chunk the text into sections

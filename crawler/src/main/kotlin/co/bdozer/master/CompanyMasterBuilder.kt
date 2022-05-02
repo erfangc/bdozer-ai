@@ -40,6 +40,9 @@ object CompanyMasterBuilder {
         val record = CompanyMasterRecord(
             id = ticker,
             ticker = ticker,
+            enterpriseValue = enterpriseValue,
+            marketCap = marketCap,
+            price = price,
             cik = mt.comp_cik,
             exchange = mt.exchange,
             companyName = mt.comp_name ?: mt.comp_name_2,
@@ -47,9 +50,6 @@ object CompanyMasterBuilder {
             earnings = trend(fcs.quarters) { it.net_income_loss },
             sales = trend(fcs.quarters) { it.tot_revnu },
             latestMetrics = latestMetrics(rawData),
-            enterpriseValue = enterpriseValue,
-            marketCap = marketCap,
-            price = price,
             perShareMetrics = perShareMetrics(rawData),
             answersFromTenKs = null,
         )
@@ -110,7 +110,7 @@ object CompanyMasterBuilder {
     }
 
     private fun parseTenK(ticker: String): List<TenK> {
-        return TenKProcessor.processTicker(ticker = ticker)
+        return TenKProcessor.buildTenKs(ticker = ticker)
     }
 
     private fun enterpriseValue(tickerDetailV3: TickerDetailV3, fcs: FCS): Double {

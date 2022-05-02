@@ -1,6 +1,6 @@
 package co.bdozer.tenk
 
-import co.bdozer.tenk.TenKProcessor.processTicker
+import co.bdozer.tenk.TenKProcessor.buildTenKs
 import org.slf4j.LoggerFactory
 import java.io.FileInputStream
 import kotlin.system.exitProcess
@@ -30,7 +30,7 @@ object R1000TenKIngestor {
                 log.info("Processing state error=$error count=$count success=$success remaining=$remaining ticker=$ticker")
                 remaining--
                 count++
-                processTicker(ticker)
+                buildTenKs(ticker)
                 success++
             } catch (e: Exception) {
                 log.error("Exception occurred while processing ticker={}, error={}", ticker, e.message)
