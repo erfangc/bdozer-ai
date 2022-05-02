@@ -17,7 +17,7 @@ object Polygon {
     fun tickerDetailV3(ticker: String): TickerDetailV3 {
         val httpResponse = httpClient.send(
             HttpRequest
-                .newBuilder(URI.create("https://api.polygon.io/v3/reference/tickers/AAPL?apiKey=$apiKey"))
+                .newBuilder(URI.create("https://api.polygon.io/v3/reference/tickers/$ticker?apiKey=$apiKey"))
                 .GET()
                 .build(),
             BodyHandlers.ofInputStream(),
