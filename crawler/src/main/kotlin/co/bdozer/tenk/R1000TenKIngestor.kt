@@ -9,10 +9,10 @@ import kotlin.system.exitProcess
  * This program takes a list of S&P companies
  * and for each one ... queries its CIK and then ingest the latest 10-K filing
  */
-object Russell1000Parser {
+object R1000TenKIngestor {
     
-    private val log = LoggerFactory.getLogger(Russell1000Parser::class.java)
-    fun parseRussell1000() {
+    private val log = LoggerFactory.getLogger(R1000TenKIngestor::class.java)
+    fun ingestR1000ConstituentTenKs() {
 
         val tickers = FileInputStream("crawler/russell-1000-constituents.txt")
             .bufferedReader()
