@@ -18,6 +18,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import okio.utf8Size
 import org.apache.http.HttpHost
 import org.elasticsearch.action.index.IndexRequest
+import org.elasticsearch.action.index.IndexResponse
 import org.elasticsearch.client.RequestOptions
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestHighLevelClient
@@ -69,7 +70,7 @@ object TenKProcessor {
         val submission = submission(cik)
 
         val form = "10-K"
-        val idx = submission.filings?.recent?.form?.indexOfFirst { it == form } 
+        val idx = submission.filings?.recent?.form?.indexOfFirst { it == form }
             ?: error("cannot find form $form for ticker $ticker")
         val recent = submission.filings.recent
         val ash = recent.accessionNumber?.get(idx) ?: error("...")
@@ -96,32 +97,34 @@ object TenKProcessor {
         //
         // Index each section
         //
-        chunks.filter { it.isNotBlank() }.forEachIndexed { seqNo, chunk ->
-            val id = hash(url, "business", seqNo.toString())
-            val section = "Business"
-            val tenK = TenK(
-                id = id,
-                cik = cik,
-                ash = ash,
-                url = url,
-                seqNo = seqNo,
-                text = chunk,
-                section = section,
-                ticker = ticker,
-                reportDate = LocalDate.parse(reportDate),
-                companyName = submission.name ?: "Unknown",
-            )
+        chunks
+            .filter { it.isNotBlank() }
+            .forEachIndexed { seqNo, chunk ->
+                val id = hash(url, "business", seqNo.toString())
+                val section = "Business"
+                val tenK = TenK(
+                    id = id,
+                    cik = cik,
+                    ash = ash,
+                    url = url,
+                    seqNo = seqNo,
+                    text = chunk,
+                    section = section,
+                    ticker = ticker,
+                    reportDate = LocalDate.parse(reportDate),
+                    companyName = submission.name ?: "Unknown",
+                )
 
-            val json = objectMapper.writeValueAsString(tenK)
-            val indexResponse = restHighLevelClient.index(
-                IndexRequest("ten-k")
-                    .id(id)
-                    .source(json, XContentType.JSON),
-                RequestOptions.DEFAULT,
-            )
-            
-            log.info("Indexed document, result={}, ticker={} seqNo={}", indexResponse.result, ticker, seqNo)
-        }
+                val json = objectMapper.writeValueAsString(tenK)
+                val indexResponse = restHighLevelClient.index(
+                    IndexRequest("ten-k")
+                        .id(id)
+                        .source(json, XContentType.JSON),
+                    RequestOptions.DEFAULT,
+                )
+
+                log.info("Indexed document, result={}, ticker={} seqNo={}", indexResponse.result, ticker, seqNo)
+            }
 
     }
 
