@@ -77,19 +77,16 @@ object CompanyMasterBuilder {
             tenKs.map { tenK -> tenK.text }
 
             val questions = listOf(
-                "What business are we in?",
                 "What products do we produce?",
-                "What services do we provide to our customers?",
-                "What is our primary business?",
-                "Who do we compete with?",
-                "Who are our customers or clients?",
-                "Do we sell directly to customers or through a distribution partner?",
-                "Are we direct to consumer (b2c), business to business (b2b) or both?",
-                "What are the biggest risks in our business?",
-                "What are competitive advantages?",
-                "How do we plan to grow our business going forward?",
-                "What are our biggest challenges?",
-                "What are the largest expenses the company incur?",
+                "What products does the company produce?",
+                "What products do we offer?",
+                "What products does the company offer?",
+                "Whom do we serve?",
+                "Whom does the company serve?",
+                "What is our business model?",
+                "What is the company's business model?",
+                "What is our value proposition to customers?",
+                "What is the company's value proposition to customers?",
             )
 
             /*

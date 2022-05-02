@@ -1,8 +1,9 @@
 package co.bdozer.drivers
 
 import co.bdozer.master.CompanyMasterBuilder
+import kotlin.system.exitProcess
 
 fun main() {
-    val record = CompanyMasterBuilder.buildCompanyRecord("NVAX")
-    println(record)
+    CompanyMasterBuilder.buildCompanyRecord("T")
+    exitProcess(0)
 }
