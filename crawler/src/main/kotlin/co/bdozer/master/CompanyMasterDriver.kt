@@ -1,9 +1,6 @@
 package co.bdozer.master
 
-import co.bdozer.master.calculators.FCS
-import co.bdozer.master.calculators.fcs
-import co.bdozer.master.calculators.frs
-import co.bdozer.master.calculators.price
+import co.bdozer.master.calculators.*
 import co.bdozer.master.models.CompanyMasterRecord
 import co.bdozer.master.models.MarketData
 import co.bdozer.polygon.Polygon.tickerDetailV3

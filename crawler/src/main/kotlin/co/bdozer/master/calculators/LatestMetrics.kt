@@ -1,5 +1,6 @@
-package co.bdozer.master
+package co.bdozer.master.calculators
 
+import co.bdozer.master.RawData
 import co.bdozer.master.models.LatestMetrics
 
 fun latestMetrics(rawData: RawData): LatestMetrics {

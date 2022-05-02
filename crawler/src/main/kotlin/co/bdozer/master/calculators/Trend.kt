@@ -1,10 +1,10 @@
-package co.bdozer.master
+package co.bdozer.master.calculators
 
 import co.bdozer.master.models.Trend
 import co.bdozer.zacks.models.FC
 
 fun trend(fcs: List<FC>, extractor: (FC) -> Double?): Trend {
-    val fcs = fcs.take(5).sortedByDescending { it.qtr_nbr }
+    val fcs = fcs.take(6).sortedByDescending { it.qtr_nbr }
     val pctChanges = fcs
         .windowed(2)
         .map {
