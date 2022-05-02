@@ -14,6 +14,4 @@ data class CompanyMasterRecord(
     val latestMetrics: LatestMetrics?,
     val sales: Trend?,
     val earnings: Trend?,
-    val business: List<String>?,
-    val riskFactors: List<String>?,
 )

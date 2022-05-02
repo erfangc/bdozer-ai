@@ -1,5 +1,7 @@
 package co.bdozer.master
 
+import co.bdozer.master.calculators.FCS
+import co.bdozer.master.calculators.FRS
 import co.bdozer.zacks.models.MT
 
 data class RawData(

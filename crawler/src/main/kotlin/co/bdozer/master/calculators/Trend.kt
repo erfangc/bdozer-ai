@@ -1,4 +1,4 @@
-package co.bdozer.master.TrendFn
+package co.bdozer.master
 
 import co.bdozer.master.models.Trend
 import co.bdozer.zacks.models.FC
