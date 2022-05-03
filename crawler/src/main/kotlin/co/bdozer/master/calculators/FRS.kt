@@ -21,7 +21,7 @@ fun frs(ticker: String): FRS {
     ).toList()
     val groupBy = results.groupBy { it.per_type }
     val annuals = groupBy["A"]?.take(2) ?: emptyList()
-    val quarters = groupBy["Q"]?.take(5) ?: emptyList()
+    val quarters = groupBy["Q"]?.take(6) ?: emptyList()
 
     println("Loaded fundamental ratios for $ticker")
     return FRS(annuals = annuals, quarters = quarters)

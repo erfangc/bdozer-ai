@@ -75,7 +75,6 @@ object TenKProcessor {
         elements.forEach { body.appendChild(it) }
 
         val textBody = plainText(body)
-        log.info("10-K text:\n$textBody")
 
         //
         // Chunk the text into sections

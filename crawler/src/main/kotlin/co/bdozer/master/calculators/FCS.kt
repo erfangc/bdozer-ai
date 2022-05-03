@@ -21,7 +21,7 @@ fun fcs(ticker: String): FCS {
 
     val groupBy = results.groupBy { it.per_type }
     val annuals = groupBy["A"]?.take(2) ?: emptyList()
-    val quarters = groupBy["Q"]?.take(5) ?: emptyList()
+    val quarters = groupBy["Q"]?.take(6) ?: emptyList()
     
     println("Loaded fundamentals characteristics for $ticker")
     return FCS(annuals = annuals, quarters = quarters)

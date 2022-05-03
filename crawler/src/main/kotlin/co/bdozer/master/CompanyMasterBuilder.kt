@@ -77,16 +77,7 @@ object CompanyMasterBuilder {
             tenKs.map { tenK -> tenK.text }
 
             val questions = listOf(
-                "What products do we produce?",
-                "What products does the company produce?",
-                "What products do we offer?",
-                "What products does the company offer?",
-                "Whom do we serve?",
-                "Whom does the company serve?",
-                "What is our business model?",
-                "What is the company's business model?",
-                "What is our value proposition to customers?",
-                "What is the company's value proposition to customers?",
+                "What products do we make?",
             )
 
             /*
