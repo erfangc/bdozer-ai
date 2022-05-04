@@ -1,4 +1,4 @@
-#!/Users/erfangchen/IdeaProjects/bdozer-ai/core-nlp/bin/python3.9
+#!/Users/erfangchen/IdeaProjects/bdozer-ai/core-nlp/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
