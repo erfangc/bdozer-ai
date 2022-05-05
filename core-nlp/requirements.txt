@@ -6,7 +6,6 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 click==8.0.4
 cymem==2.0.6
-en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.2.0/en_core_web_trf-3.2.0-py3-none-any.whl
 fastapi==0.75.0
 filelock==3.6.0
 h11==0.13.0
