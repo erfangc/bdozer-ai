@@ -3,6 +3,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Auto
 cross_encoder_model_name = 'cross-encoder/ms-marco-MiniLM-L-6-v2'
 question_answer_model_name = 'bert-large-uncased-whole-word-masking-finetuned-squad'
 zero_shot_classification_model_name = 'facebook/bart-large-mnli'
+classifier_model_name = 'sentence-transformers/all-MiniLM-L6-v2'
 
 
 def save_pretrained_seq_classification(model_name: str):
@@ -39,5 +40,6 @@ def save_pretrained_question_answering(model_name: str):
 
 if __name__ == "__main__":
     save_pretrained_seq_classification(cross_encoder_model_name)
+    save_pretrained_seq_classification(classifier_model_name)
     save_pretrained_seq_classification(zero_shot_classification_model_name)
     save_pretrained_question_answering(question_answer_model_name)
