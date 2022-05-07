@@ -30,14 +30,14 @@ object HtmlToPlainText {
      * @param element the root element to format
      * @return formatted text
      */
-    fun plainText(element: Element?): String {
-        val formatter = FormattingVisitor()
+    fun plainText(element: Element?, printLinks: Boolean = true): String {
+        val formatter = FormattingVisitor(printLinks)
         NodeTraversor.traverse(formatter, element!!) // walk the DOM, and call .head() and .tail() for each node
         return formatter.toString()
     }
 
     // the formatting rules, implemented in a breadth-first DOM traverse
-    private class FormattingVisitor : NodeVisitor {
+    private class FormattingVisitor(private val printLinks: Boolean) : NodeVisitor {
         private var width = 0
         private val accum = StringBuilder() // holds the accumulated text
 
@@ -59,7 +59,7 @@ object HtmlToPlainText {
             ) append("\n")
         }
 
-        // hit when all of the node's children (if any) have been visited
+        // hit when all the node's children (if any) have been visited
         override fun tail(node: Node, depth: Int) {
             val name = node.nodeName()
             if (StringUtil.`in`(
@@ -75,7 +75,7 @@ object HtmlToPlainText {
                     "h5",
                     "div"
                 )
-            ) append("\n") else if (name == "a") append(
+            ) append("\n") else if (name == "a" && printLinks) append(
                 String.format(" <%s>", node.absUrl("href"))
             )
         }

@@ -1,5 +1,6 @@
 package co.bdozer.tenk
 
+import co.bdozer.CompanyText
 import co.bdozer.utils.HashGenerator.hash
 import co.bdozer.tenk.models.Submission
 import co.bdozer.tenk.models.TenK
@@ -9,10 +10,6 @@ import co.bdozer.utils.Database.runSql
 import co.bdozer.utils.DocumentChunker.chunkDoc
 import co.bdozer.utils.HtmlToPlainText.plainText
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.elasticsearch.action.bulk.BulkRequest
-import org.elasticsearch.action.index.IndexRequest
-import org.elasticsearch.client.RequestOptions
-import org.elasticsearch.common.xcontent.XContentType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -26,7 +23,6 @@ object TenKProcessor {
 
     private val log = LoggerFactory.getLogger(TenKProcessor::class.java)
     private val objectMapper = Beans.objectMapper()
-    private val restHighLevelClient = Beans.restHighLevelClient()
 
     private fun submission(cik: String): Submission {
         val inputStream = HttpClient.newHttpClient().send(
@@ -47,7 +43,7 @@ object TenKProcessor {
         return cik
     }
 
-    fun buildTenKs(ticker: String): List<TenK> {
+    fun buildCompanyText(ticker: String): CompanyText {
 
         val cik = toCik(ticker)
 
@@ -77,50 +73,21 @@ object TenKProcessor {
         val textBody = plainText(body)
 
         //
-        // Chunk the text into sections
-        //
-        val chunks = chunkDoc(textBody)
-
-        //
         // Index each section
         //
-        return chunks.filter { it.isNotBlank() }.mapIndexed { seqNo, chunk ->
-            val id = hash(url, "business", seqNo.toString())
-            val section = "Business"
-            TenK(
-                id = id,
-                cik = cik,
-                ash = ash,
-                url = url,
-                seqNo = seqNo,
-                text = chunk,
-                section = section,
-                ticker = ticker,
-                reportDate = LocalDate.parse(reportDate),
-                companyName = submission.name ?: "Unknown",
-            )
-        }
-
-    }
-
-    fun indexTenKs(tenKs: List<TenK>) {
-        val indexRequests = tenKs.map { tenK ->
-            val json = objectMapper.writeValueAsString(tenK)
-            IndexRequest("ten-k").id(tenK.id).source(json, XContentType.JSON)
-        }
-
-        val bulkRequest = BulkRequest()
-        indexRequests.forEach { bulkRequest.add(it) }
-        val indexResponse = restHighLevelClient.bulk(
-            bulkRequest,
-            RequestOptions.DEFAULT,
+        return CompanyText(
+            id = hash(ticker, url),
+            ticker = ticker,
+            text = textBody,
+            url = url,
+            metaData = mapOf(
+                "cik" to cik,
+                "ash" to ash,
+                "reportDate" to reportDate,
+            ),
+            source = "10-K"
         )
 
-        log.info(
-            "BulkIndex complete, ingestTook=${indexResponse.ingestTook} items=${indexResponse.items.size}",
-            indexResponse.ingestTook,
-            indexResponse.items
-        )
     }
 
 }

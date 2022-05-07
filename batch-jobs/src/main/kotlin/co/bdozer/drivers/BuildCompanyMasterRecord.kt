@@ -7,11 +7,15 @@ import java.io.File
 
 private val log = LoggerFactory.getLogger("Main")
 fun main() {
-    val lines = File("batch-jobs/russell-1000-constituents.txt").bufferedReader().readLines()
+    
+    val lines = File("batch-jobs/russell-1000-constituents.txt")
+        .bufferedReader()
+        .readLines()
     var remaining = lines.size
     var total = 0
     var success = 0
     val failures = arrayListOf<Exception>()
+    
     lines.forEach { line ->
         val ticker = line.trim()
         try {
