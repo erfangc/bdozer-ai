@@ -13,7 +13,7 @@
     <modules>
         <module>core-nlp-sdk</module>
         <module>ai-server</module>
-        <module>crawler</module>
+        <module>batch-jobs</module>
     </modules>
     
     <properties>

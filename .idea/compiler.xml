@@ -6,17 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="batch-jobs" />
         <module name="ai-server" />
-        <module name="crawler" />
         <module name="ten-k-saver" />
         <module name="core-nlp-sdk" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ai-server" target="11" />
+      <module name="batch-jobs" target="11" />
       <module name="bdozer-ai" target="1.5" />
       <module name="core-nlp-sdk" target="1.8" />
-      <module name="crawler" target="11" />
       <module name="ten-k-saver" target="11" />
     </bytecodeTargetLevel>
   </component>

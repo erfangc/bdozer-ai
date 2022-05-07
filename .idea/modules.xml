@@ -3,10 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ai-server/ai-server.iml" filepath="$PROJECT_DIR$/ai-server/ai-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/batch-jobs/batch-jobs.iml" filepath="$PROJECT_DIR$/batch-jobs/batch-jobs.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/bdozer-ai.iml" filepath="$PROJECT_DIR$/.idea/bdozer-ai.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp/core-nlp.iml" filepath="$PROJECT_DIR$/core-nlp/core-nlp.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" filepath="$PROJECT_DIR$/core-nlp-sdk/core-nlp-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/crawler/crawler.iml" filepath="$PROJECT_DIR$/crawler/crawler.iml" />
     </modules>
   </component>
 </project>
