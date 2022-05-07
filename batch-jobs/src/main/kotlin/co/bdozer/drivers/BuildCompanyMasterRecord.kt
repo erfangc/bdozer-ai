@@ -8,6 +8,7 @@ import java.io.File
 private val log = LoggerFactory.getLogger("Main")
 fun main() {
     val lines = File("batch-jobs/russell-1000-constituents.txt").bufferedReader().readLines()
+    var remaining = lines.size
     var total = 0
     var success = 0
     val failures = arrayListOf<Exception>()
@@ -20,10 +21,12 @@ fun main() {
             log.info("Finished processing $ticker")
             success++
         } catch (e: Exception) {
-            log.error("Failed to process $ticker error=${e.message}")
+            log.error("Failed to process $ticker error={}", e.message)
             failures.add(e)
         } finally {
             total++
+            remaining--
+            log.info("Status remaining={} total={}, success={}, failures={}", remaining, total, success, failures.size)
         }
     }
 

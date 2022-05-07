@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory
 
 object CompanyMasterBuilder {
 
-    private val log = LoggerFactory.getLogger(CompanyMasterBuilder::class.java)
-    private val objectWriter: ObjectWriter = Beans.objectMapper().writerWithDefaultPrettyPrinter()
     fun buildCompanyRecord(ticker: String): CompanyMasterRecord {
         val tickerDetailV3 = tickerDetailV3(ticker)
         val marketCap = tickerDetailV3.results.market_cap
@@ -37,7 +35,7 @@ object CompanyMasterBuilder {
             ),
         )
 
-        val record = CompanyMasterRecord(
+        return CompanyMasterRecord(
             id = ticker,
             ticker = ticker,
             enterpriseValue = enterpriseValue,
@@ -51,57 +49,7 @@ object CompanyMasterBuilder {
             sales = trend(fcs.quarters) { it.tot_revnu },
             latestMetrics = latestMetrics(rawData),
             perShareMetrics = perShareMetrics(rawData),
-            answersFromTenKs = null,
         )
-
-        /*
-        See what else we can learn from the company's TenKs
-         */
-        val record1 = addAnswersFromTenK(ticker, record)
-        log.info(objectWriter.writeValueAsString(record1))
-
-        return record1
-    }
-
-    private fun addAnswersFromTenK(
-        ticker: String,
-        record: CompanyMasterRecord
-    ): CompanyMasterRecord {
-        val tenKs = parseTenK(ticker)
-        val record1 = if (tenKs.isNotEmpty()) {
-            val first = tenKs.first()
-            val ash = first.ash
-            val url = first.url
-            val reportDate = first.reportDate
-
-            tenKs.map { tenK -> tenK.text }
-
-            val questions = listOf(
-                "What products do we make?",
-            )
-
-            /*
-            For every question conduct a semantic search based on the tenK results
-             */
-            val answers = questions.map { question ->
-                QuestionAnswerMachine.answerQuestion(question, tenKs)
-            }
-            record.copy(
-                answersFromTenKs = AnswersFromTenKs(
-                    url = url,
-                    reportDate = reportDate,
-                    ash = ash,
-                    answers = answers,
-                )
-            )
-        } else {
-            record
-        }
-        return record1
-    }
-
-    private fun parseTenK(ticker: String): List<TenK> {
-        return TenKProcessor.buildTenKs(ticker = ticker)
     }
 
     private fun enterpriseValue(tickerDetailV3: TickerDetailV3, fcs: FCS): Double {

@@ -12,10 +12,10 @@ object Indexer {
     private val restHighLevelClient = Beans.restHighLevelClient()
 
     fun index(id: String, obj: Any): IndexResponse {
-        val idx = obj::class.java.name
+        val index = obj::class.java.name.lowercase()
         val json = objectMapper.writeValueAsString(obj)
         return restHighLevelClient.index(
-            IndexRequest(idx)
+            IndexRequest(index)
                 .id(id)
                 .source(json, XContentType.JSON),
             RequestOptions.DEFAULT
