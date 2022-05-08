@@ -4,6 +4,7 @@ import co.bdozer.libraries.indexer.Indexer.index
 import co.bdozer.libraries.master.CompanyMasterBuilder
 import org.slf4j.LoggerFactory
 import java.io.File
+import kotlin.system.exitProcess
 
 private val log = LoggerFactory.getLogger("Main")
 fun main() {
@@ -38,4 +39,5 @@ fun main() {
     failures.groupBy { it.javaClass }.forEach { (exceptionClass, exceptions) ->
         log.info("exceptionClass={}, count={}", exceptionClass.name, exceptions.size)
     }
+    exitProcess(0)
 }

@@ -29,7 +29,10 @@ object Beans {
     }
 
     fun httpClient(): HttpClient {
-        return HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()
+        return HttpClient
+            .newBuilder()
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .build()
     }
 
     fun coreNLP(): CoreNlpApi {
